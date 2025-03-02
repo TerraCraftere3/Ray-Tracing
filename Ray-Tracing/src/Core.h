@@ -38,8 +38,4 @@ static void initLogger() {
 	spdlog::set_pattern("[%H:%M:%S] [thread %t] %^%v%$");
 	spdlog::set_level(spdlog::level::debug);
 	LOG_INFO("Logger initialized!");
-	LOG_DEBUG("Debug Test");
-	LOG_WARN("Warn Test, {}", 123.456f);
-	LOG_ERROR("Error Test, {}:{}", "File not found", 404);
-	system("PAUSE");
 }

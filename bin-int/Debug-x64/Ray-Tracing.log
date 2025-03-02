@@ -1,4 +1,9 @@
 ﻿  Ray-Tracing.cpp
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\minwindef.h(130,9): warning C4005: "APIENTRY": Makro-Neudefinition
+  (Quelldatei „src/Ray-Tracing.cpp“ wird kompiliert)
+      E:\Programs\vcpkg\installed\x64-windows\include\glad\glad.h(32,9):
+      siehe vorherige Definition von "APIENTRY"
+  
   Ray-Tracing.vcxproj -> D:\Projects\Ray-Tracing\bin\Debug-x64\Ray-Tracing.exe
   Der Befehl "pwsh.exe" ist entweder falsch geschrieben oder
   konnte nicht gefunden werden.

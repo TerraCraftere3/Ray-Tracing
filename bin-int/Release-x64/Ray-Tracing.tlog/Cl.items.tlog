@@ -1,4 +1,7 @@
+D:\Projects\Ray-Tracing\Ray-Tracing\src\Utils.cpp;D:\Projects\Ray-Tracing\bin-int\Release-x64\Utils.obj
 D:\Projects\Ray-Tracing\Ray-Tracing\src\main.cpp;D:\Projects\Ray-Tracing\bin-int\Release-x64\main.obj
+D:\Projects\Ray-Tracing\Ray-Tracing\src\Renderer.cpp;D:\Projects\Ray-Tracing\bin-int\Release-x64\Renderer.obj
+D:\Projects\Ray-Tracing\Ray-Tracing\src\Shader.cpp;D:\Projects\Ray-Tracing\bin-int\Release-x64\Shader.obj
 D:\Projects\Ray-Tracing\Ray-Tracing\vendor\imgui\imgui.cpp;D:\Projects\Ray-Tracing\bin-int\Release-x64\imgui.obj
 D:\Projects\Ray-Tracing\Ray-Tracing\vendor\imgui\imgui_demo.cpp;D:\Projects\Ray-Tracing\bin-int\Release-x64\imgui_demo.obj
 D:\Projects\Ray-Tracing\Ray-Tracing\vendor\imgui\imgui_draw.cpp;D:\Projects\Ray-Tracing\bin-int\Release-x64\imgui_draw.obj

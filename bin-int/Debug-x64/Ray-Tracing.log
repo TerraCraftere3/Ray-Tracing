@@ -4,6 +4,22 @@ C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\minwindef.h(1
       E:\Programs\vcpkg\installed\x64-windows\include\glad\glad.h(32,9):
       siehe vorherige Definition von "APIENTRY"
   
+D:\Programms\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\format(42): warning STL4038: The contents of <format> are available only with C++20 or later.
+D:\Projects\Ray-Tracing\Ray-Tracing\src\Renderer.cpp(118,43): warning C4244: "Argument": Konvertierung von "int" in "float", möglicher Datenverlust
+D:\Projects\Ray-Tracing\Ray-Tracing\src\Renderer.cpp(120,30): warning C4244: "Argument": Konvertierung von "double" in "float", möglicher Datenverlust
+D:\Projects\Ray-Tracing\Ray-Tracing\src\Renderer.cpp(122,31): warning C4244: "Argument": Konvertierung von "int" in "float", möglicher Datenverlust
+  Shader.cpp
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\minwindef.h(130,9): warning C4005: "APIENTRY": Makro-Neudefinition
+  (Quelldatei „src/Shader.cpp“ wird kompiliert)
+      E:\Programs\vcpkg\installed\x64-windows\include\glad\glad.h(32,9):
+      siehe vorherige Definition von "APIENTRY"
+  
+  Utils.cpp
+  main.cpp
+D:\Projects\Ray-Tracing\Ray-Tracing\src\main.cpp(63,45): warning C4305: "Argument": Verkürzung von "double" in "float"
+D:\Projects\Ray-Tracing\Ray-Tracing\src\main.cpp(63,40): warning C4305: "Argument": Verkürzung von "double" in "float"
+D:\Projects\Ray-Tracing\Ray-Tracing\src\main.cpp(63,35): warning C4305: "Argument": Verkürzung von "double" in "float"
+  Code wird generiert...
   Ray-Tracing.vcxproj -> D:\Projects\Ray-Tracing\bin\Debug-x64\Ray-Tracing.exe
   Der Befehl "pwsh.exe" ist entweder falsch geschrieben oder
   konnte nicht gefunden werden.

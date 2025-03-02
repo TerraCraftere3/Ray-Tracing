@@ -3,6 +3,8 @@
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 
+#include "Utils.h"
+
 #if defined(WIN32)
 	#define PLATFORM Windows
 	#define PLATFORM_STRING "Windows"
@@ -22,35 +24,26 @@
 	#define RELEASE
 #endif
 
-namespace Utils {
-	void Empty();
-
-	template<typename First, typename ... Object>
-	void Empty(First arg, const Object&... rest);
-}
-
-
-
 #ifdef DEBUG
 	#undef IMGUI_DISABLE
-#elif RELEASE
+#elif defined(RELEASE)
 	#define IMGUI_DISABLE
 #endif
 
 
 // LOGGER
 
-#ifdef DEBUG
+//#ifdef DEBUG
 	#define LOG_INFO spdlog::get("console")->info
 	#define LOG_DEBUG spdlog::get("console")->debug
 	#define LOG_WARN spdlog::get("console")->warn
 	#define LOG_ERROR spdlog::get("console")->error
-#elif RELEASE
+/*#elif defined(RELEASE)
 	#define LOG_INFO Utils::Empty
 	#define LOG_DEBUG Utils::Empty
 	#define LOG_WARN Utils::Empty
 	#define LOG_ERROR spdlog::get("console")->error
-#endif
+#endif*/
 
 static void initLogger() {
 	auto console = spdlog::stdout_color_mt("console");

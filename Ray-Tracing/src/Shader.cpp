@@ -1,5 +1,6 @@
 #include "Shader.h"
 #include <Core.h>
+#include <chrono>
 
 Shader::Shader(const char* vertexPath, const char* fragmentPath)
 {
@@ -76,6 +77,8 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
     // delete the shaders as they're linked into our program now and no longer necessary
     glDeleteShader(vertex);
     glDeleteShader(fragment);
+
+	LOG_INFO("Finished compiling shader");
 }
 
 Shader::Shader(unsigned int identification)
@@ -96,7 +99,19 @@ void Shader::setInt(const std::string& name, int value) const
 {
     glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
 }
+void Shader::setDouble(const std::string& name, double value) const
+{
+    glUniform1d(glGetUniformLocation(ID, name.c_str()), value);
+}
 void Shader::setFloat(const std::string& name, float value) const
 {
     glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+}
+void Shader::setFloat2(const std::string& name, glm::vec2 value) const
+{
+    glUniform2f(glGetUniformLocation(ID, name.c_str()), value.x, value.y);
+}
+void Shader::setFloat3(const std::string& name, glm::vec3 value) const
+{
+    glUniform3f(glGetUniformLocation(ID, name.c_str()), value.x, value.y, value.z);
 }

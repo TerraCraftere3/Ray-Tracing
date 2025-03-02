@@ -9,7 +9,7 @@
 #include <GLFW/glfw3.h>
 #include <Renderer.h>
 
-#define WINDOW_WIDTH 1200
+#define WINDOW_WIDTH 1600
 #define WINDOW_HEIGHT 900
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -18,15 +18,19 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     //LOG_DEBUG("Resized window to {}, {}", width, height);
 }
 
-void processInput(GLFWwindow* window)
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
+    if (key == GLFW_KEY_TAB && action == GLFW_PRESS)
+        Renderer::toggleImGui();
+    ImGui_ImplGlfw_KeyCallback(window, key, scancode, action, mods);
 }
 
 int main()
 {
     initLogger();
+    Utils::initTime();
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -73,9 +77,10 @@ int main()
 
     renderer.prepareOpenGL();
 
+    glfwSetKeyCallback(window, key_callback);
+
     while (!glfwWindowShouldClose(window))
     {
-        processInput(window);
 #ifndef IMGUI_DISABLE
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
@@ -93,6 +98,8 @@ int main()
 #endif
         glfwSwapBuffers(window);
         glfwPollEvents();
+
+		Utils::nextFrame();
     }
     glfwTerminate();
     return 0;

@@ -2,6 +2,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "imgui.h"
+#include "imgui_stdlib.h"
 #include <Shader.h>
 
 struct RendererOpenGLData {
@@ -52,8 +53,13 @@ public:
 	void renderImGui();
 	void prepareOpenGL();
 	void renderOpenGL();
+	static void toggleImGui();
 private:
 	GLFWwindow* m_Window;
 	RendererOpenGLData m_OpenGL;
 	RendererImGuiData m_ImGui;
+	std::string m_ShaderFragmentPath;
+	std::string m_ShaderVertexPath;
+	Shader m_Shader;
+	static bool m_ImGuiEnabled;
 };

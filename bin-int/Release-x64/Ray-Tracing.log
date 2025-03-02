@@ -1,23 +1,9 @@
-﻿D:\Programms\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1122,5): warning MSB8027: Mehrere Dateien mit dem Namen imgui_impl_glfw.cpp führen zu Ausgaben am selben Speicherort. Dadurch kann ein falsches Buildergebnis entstehen. Die betroffenen Dateien sind vendor\backends\imgui_impl_glfw.cpp, vendor\imgui\imgui_impl_glfw.cpp.
-D:\Programms\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1122,5): warning MSB8027: Mehrere Dateien mit dem Namen imgui_impl_opengl3.cpp führen zu Ausgaben am selben Speicherort. Dadurch kann ein falsches Buildergebnis entstehen. Die betroffenen Dateien sind vendor\backends\imgui_impl_opengl3.cpp, vendor\imgui\imgui_impl_opengl3.cpp.
-  main.cpp
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\minwindef.h(130,9): warning C4005: "APIENTRY": Makro-Neudefinition
-  (Quelldatei „src/main.cpp“ wird kompiliert)
-      E:\Programs\vcpkg\installed\x64-windows\include\glad\glad.h(32,9):
-      siehe vorherige Definition von "APIENTRY"
-  
-  imgui_impl_glfw.cpp
-\vendor\backends\imgui_impl_glfw.cpp(1,1): error C1083: Datei (Quelle) kann nicht geöffnet werden: "vendor\backends\imgui_impl_glfw.cpp": No such file or directory
-  (Quelldatei „/vendor/backends/imgui_impl_glfw.cpp“ wird kompiliert)
-  
-  imgui_impl_opengl3.cpp
-\vendor\backends\imgui_impl_opengl3.cpp(1,1): error C1083: Datei (Quelle) kann nicht geöffnet werden: "vendor\backends\imgui_impl_opengl3.cpp": No such file or directory
-  (Quelldatei „/vendor/backends/imgui_impl_opengl3.cpp“ wird kompiliert)
-  
-  imgui.cpp
-  imgui_demo.cpp
-  imgui_draw.cpp
-  imgui_impl_glfw.cpp
-  imgui_impl_opengl3.cpp
-  imgui_tables.cpp
-  imgui_widgets.cpp
+﻿  main.cpp
+  Code wird generiert.
+  3692 of 3703 functions (99.7%) were compiled, the rest were copied from previous compilation.
+    573 functions were new in current compilation
+    2 functions had inline decision re-evaluated but remain unchanged
+  Codegenerierung ist abgeschlossen.
+  Ray-Tracing.vcxproj -> D:\Projects\Ray-Tracing\bin\Release-x64\Ray-Tracing.exe
+  Der Befehl "pwsh.exe" ist entweder falsch geschrieben oder
+  konnte nicht gefunden werden.

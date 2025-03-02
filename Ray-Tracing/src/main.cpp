@@ -1,3 +1,4 @@
+#include "Core.h"
 #include <iostream>
 #ifndef IMGUI_DISABLE
 #include "imgui.h"
@@ -6,7 +7,10 @@
 #endif
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include "Core.h"
+#include <Renderer.h>
+
+#define WINDOW_WIDTH 1200
+#define WINDOW_HEIGHT 900
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -27,7 +31,7 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    GLFWwindow* window = glfwCreateWindow(800, 600, "Raytracer", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Raytracer", NULL, NULL);
     if (window == NULL)
     {
         LOG_ERROR("Failed to create GLFW window");
@@ -47,14 +51,24 @@ int main()
 
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
+    auto& style = ImGui::GetStyle();
+    ImVec4* colors = style.Colors;
+
+    const ImVec4 bgColor = ImVec4(0.1, 0.1, 0.1, 0.5);
+    colors[ImGuiCol_WindowBg] = bgColor;
+    colors[ImGuiCol_ChildBg] = bgColor;
+    colors[ImGuiCol_TitleBg] = bgColor;
 #endif
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
         LOG_ERROR("Failed to initialize GLAD");
         return -1;
     }
-    glViewport(0, 0, 800, 600);
+    glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
+    Renderer renderer = Renderer(window);
+
     while (!glfwWindowShouldClose(window))
     {
         processInput(window);
@@ -63,16 +77,13 @@ int main()
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        ImGui::Begin("Another Window");   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-        ImGui::Text("Hello from another window!");
-        if (ImGui::Button("Close Me"))
-            LOG_INFO("Teeeest");
-        ImGui::End();
+        renderer.renderImGui();
 
         ImGui::Render();
 #endif
-        glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+
+        renderer.renderOpenGL();
+        
 #ifndef IMGUI_DISABLE
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 #endif

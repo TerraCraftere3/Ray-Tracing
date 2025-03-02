@@ -20,19 +20,25 @@ void Empty(First arg, const Object&... rest) {
 	Empty(rest...);
 }
 
+#ifdef DEBUG
+	#undef IMGUI_DISABLE
+#elif RELEASE
+	#define IMGUI_DISABLE
+#endif
+
 
 // LOGGER
 
 #ifdef DEBUG
-#define LOG_INFO spdlog::get("console")->info
-#define LOG_DEBUG spdlog::get("console")->debug
-#define LOG_WARN spdlog::get("console")->warn
-#define LOG_ERROR spdlog::get("console")->error
+	#define LOG_INFO spdlog::get("console")->info
+	#define LOG_DEBUG spdlog::get("console")->debug
+	#define LOG_WARN spdlog::get("console")->warn
+	#define LOG_ERROR spdlog::get("console")->error
 #elif RELEASE
-#define LOG_INFO Empty
-#define LOG_DEBUG Empty
-#define LOG_WARN Empty
-#define LOG_ERROR spdlog::get("console")->error
+	#define LOG_INFO Empty
+	#define LOG_DEBUG Empty
+	#define LOG_WARN Empty
+	#define LOG_ERROR spdlog::get("console")->error
 #endif
 
 static void initLogger() {

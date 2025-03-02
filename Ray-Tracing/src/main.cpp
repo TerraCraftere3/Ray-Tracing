@@ -31,7 +31,7 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    GLFWwindow* window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Raytracer", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Raytracer | " PLATFORM_STRING " " CONFIG_STRING, NULL, NULL);
     if (window == NULL)
     {
         LOG_ERROR("Failed to create GLFW window");
@@ -39,6 +39,8 @@ int main()
         return -1;
     }
     glfwMakeContextCurrent(window);
+
+    Renderer renderer = Renderer(window);
 
 #ifndef IMGUI_DISABLE
     IMGUI_CHECKVERSION();
@@ -58,6 +60,8 @@ int main()
     colors[ImGuiCol_WindowBg] = bgColor;
     colors[ImGuiCol_ChildBg] = bgColor;
     colors[ImGuiCol_TitleBg] = bgColor;
+    
+    renderer.prepareImGui();
 #endif
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
@@ -67,7 +71,7 @@ int main()
     glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    Renderer renderer = Renderer(window);
+    renderer.prepareOpenGL();
 
     while (!glfwWindowShouldClose(window))
     {

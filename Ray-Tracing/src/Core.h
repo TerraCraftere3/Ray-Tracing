@@ -3,22 +3,33 @@
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 
-#ifdef WIN32
-	#define PLATFORM_STRING "Windows"
+#if defined(WIN32)
 	#define PLATFORM Windows
+	#define PLATFORM_STRING "Windows"
 #else
-	#define PLATFORM_STRING "Unknown Operating System"
 	#define PLATFORM Unknown
+	#define PLATFORM_STRING "Unknown Operating System"
 	#error Other Operating Systems or Architectures are not supported yet
 #endif
 
+#ifdef _DEBUG
+	#define CONFIG Debug
+	#define CONFIG_STRING "Debug"
+	#define DEBUG
+#elif NDEBUG
+	#define CONFIG Release
+	#define CONFIG_STRING "Release"
+	#define RELEASE
+#endif
 
-void Empty() { }
+namespace Utils {
+	void Empty();
 
-template<typename First, typename ... Object>
-void Empty(First arg, const Object&... rest) { 
-	Empty(rest...);
+	template<typename First, typename ... Object>
+	void Empty(First arg, const Object&... rest);
 }
+
+
 
 #ifdef DEBUG
 	#undef IMGUI_DISABLE
@@ -35,9 +46,9 @@ void Empty(First arg, const Object&... rest) {
 	#define LOG_WARN spdlog::get("console")->warn
 	#define LOG_ERROR spdlog::get("console")->error
 #elif RELEASE
-	#define LOG_INFO Empty
-	#define LOG_DEBUG Empty
-	#define LOG_WARN Empty
+	#define LOG_INFO Utils::Empty
+	#define LOG_DEBUG Utils::Empty
+	#define LOG_WARN Utils::Empty
 	#define LOG_ERROR spdlog::get("console")->error
 #endif
 

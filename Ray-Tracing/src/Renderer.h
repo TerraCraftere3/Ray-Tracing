@@ -2,11 +2,21 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "imgui.h"
+#include <Shader.h>
 
 struct RendererOpenGLData {
-	float vertices[3*4];
-	void setVertices(const float newVertices[3*4]) {
-		for (int i = 0; i < 3*4; i++) {
+	RendererOpenGLData()
+		: VBO(0), VAO(0), EBO(0), shader(nullptr) {
+		// Initialize vertices to zero
+		for (int i = 0; i < 6 * 4; i++) {
+			vertices[i] = 0.0f;
+		}
+	}
+
+
+	float vertices[6*4];
+	void setVertices(const float newVertices[6*4]) {
+		for (int i = 0; i < 6*4; i++) {
 			vertices[i] = newVertices[i];
 		}
 	}
@@ -26,9 +36,9 @@ struct RendererOpenGLData {
 		EBO = newEBO;
 	}
 
-	unsigned int shaderProgram;
-	void setShaderProgram(const unsigned int newShaderProgram) {
-		shaderProgram = newShaderProgram;
+	Shader* shader;
+	void setShaderProgram(Shader newShaderProgram) {
+		shader = &newShaderProgram;
 	}
 };
 

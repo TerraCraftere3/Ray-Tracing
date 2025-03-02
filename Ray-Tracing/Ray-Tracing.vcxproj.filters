@@ -15,12 +15,75 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Ray-Tracing.cpp">
+    <ClCompile Include="src\main.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\backends\imgui_impl_glfw.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\backends\imgui_impl_opengl3.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\imgui\imgui.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\imgui\imgui_demo.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\imgui\imgui_draw.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\imgui\imgui_impl_glfw.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\imgui\imgui_impl_opengl3.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\imgui\imgui_tables.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\imgui\imgui_widgets.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Core.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\backends\imgui_impl_glfw.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\backends\imgui_impl_opengl3.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\backends\imgui_impl_opengl3_loader.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\imgui\imconfig.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\imgui\imgui.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\imgui\imgui_impl_glfw.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\imgui\imgui_impl_opengl3.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\imgui\imgui_impl_opengl3_loader.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\imgui\imgui_internal.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\imgui\imstb_rectpack.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\imgui\imstb_textedit.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\imgui\imstb_truetype.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

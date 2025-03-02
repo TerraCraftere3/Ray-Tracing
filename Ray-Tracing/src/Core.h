@@ -3,11 +3,13 @@
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 
-#ifdef Windows
+#ifdef WIN32
 	#define PLATFORM_STRING "Windows"
 	#define PLATFORM Windows
 #else
-	#error Other Architectures are not supported yet
+	#define PLATFORM_STRING "Unknown Operating System"
+	#define PLATFORM Unknown
+	#error Other Operating Systems or Architectures are not supported yet
 #endif
 
 

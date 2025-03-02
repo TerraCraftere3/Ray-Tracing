@@ -1,0 +1,21 @@
+﻿D:\Programms\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1122,5): warning MSB8027: Mehrere Dateien mit dem Namen imgui_impl_glfw.cpp führen zu Ausgaben am selben Speicherort. Dadurch kann ein falsches Buildergebnis entstehen. Die betroffenen Dateien sind vendor\backends\imgui_impl_glfw.cpp, vendor\imgui\imgui_impl_glfw.cpp.
+D:\Programms\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1122,5): warning MSB8027: Mehrere Dateien mit dem Namen imgui_impl_opengl3.cpp führen zu Ausgaben am selben Speicherort. Dadurch kann ein falsches Buildergebnis entstehen. Die betroffenen Dateien sind vendor\backends\imgui_impl_opengl3.cpp, vendor\imgui\imgui_impl_opengl3.cpp.
+  main.cpp
+D:\Projects\Ray-Tracing\Ray-Tracing\src\main.cpp(7,10): error C1083: Datei (Include) kann nicht geöffnet werden: "glad/glad.h": No such file or directory
+  imgui_impl_glfw.cpp
+\vendor\backends\imgui_impl_glfw.cpp(1,1): error C1083: Datei (Quelle) kann nicht geöffnet werden: "vendor\backends\imgui_impl_glfw.cpp": No such file or directory
+  (Quelldatei „/vendor/backends/imgui_impl_glfw.cpp“ wird kompiliert)
+  
+  imgui_impl_opengl3.cpp
+\vendor\backends\imgui_impl_opengl3.cpp(1,1): error C1083: Datei (Quelle) kann nicht geöffnet werden: "vendor\backends\imgui_impl_opengl3.cpp": No such file or directory
+  (Quelldatei „/vendor/backends/imgui_impl_opengl3.cpp“ wird kompiliert)
+  
+  imgui.cpp
+  imgui_demo.cpp
+  imgui_draw.cpp
+  imgui_impl_glfw.cpp
+D:\Projects\Ray-Tracing\Ray-Tracing\vendor\imgui\imgui_impl_glfw.cpp(100,10): error C1083: Datei (Include) kann nicht geöffnet werden: "GLFW/glfw3.h": No such file or directory
+  imgui_impl_opengl3.cpp
+  imgui_tables.cpp
+  imgui_widgets.cpp
+  Code wird generiert...

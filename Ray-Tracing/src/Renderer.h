@@ -3,7 +3,10 @@
 #include <GLFW/glfw3.h>
 #include "imgui.h"
 #include "imgui_stdlib.h"
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/string_cast.hpp>
 #include <Shader.h>
+#include <Camera.h>
 
 struct RendererOpenGLData {
 	RendererOpenGLData()
@@ -62,4 +65,9 @@ private:
 	std::string m_ShaderVertexPath;
 	Shader m_Shader;
 	static bool m_ImGuiEnabled;
+	Camera m_Camera;
+	double currentFrame;
+	double lastFrame;
+	double deltaTime;
+
 };

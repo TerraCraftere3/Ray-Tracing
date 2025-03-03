@@ -8,9 +8,10 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <Renderer.h>
+#include <Input/Input.h>
 
-#define WINDOW_WIDTH 1600
-#define WINDOW_HEIGHT 900
+#define WINDOW_WIDTH 1300
+#define WINDOW_HEIGHT 1300
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -43,6 +44,8 @@ int main()
         return -1;
     }
     glfwMakeContextCurrent(window);
+
+    auto input = Input(window);
 
     Renderer renderer = Renderer(window);
 

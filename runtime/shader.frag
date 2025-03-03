@@ -7,11 +7,22 @@ uniform int u_frame;
 uniform vec2 u_resolution;
 uniform float u_aspectRatio;
 
+uniform vec3 u_rayOrigin;
+uniform mat4 u_inverseProjection;
+uniform mat4 u_inverseView;
+
+vec3 calculateRayDirection(){
+    vec2 coord = UV * 2.0f - 1.0f;
+    vec4 target = u_inverseProjection * vec4(coord.x, coord.y, 1, 1);
+    vec3 rayDirection = vec3(u_inverseView * vec4(normalize(vec3(target) / target.w), 0));
+    return rayDirection;
+}
+
 void main()
 {
     vec2 aspectUV = vec2(UV.x, UV.y);
-    vec3 rayOrigin = vec3(0.0f, 0.0f, 1.0f);
-    vec3 rayDirection = vec3(aspectUV.x, aspectUV.y, -1.0f);
+    vec3 rayOrigin = u_rayOrigin;
+    vec3 rayDirection = calculateRayDirection();
     float radius = 0.5f;
 
     float a = dot(rayDirection, rayDirection);

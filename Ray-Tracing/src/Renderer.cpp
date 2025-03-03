@@ -6,8 +6,8 @@
 bool Renderer::m_ImGuiEnabled = true;
 
 Renderer::Renderer(GLFWwindow* window)
+	: m_Camera(45.0f, 0.1f, 100.0f), m_Window(window)
 {
-	m_Window = window;
 }
 
 void Renderer::prepareImGui()
@@ -36,6 +36,9 @@ void Renderer::renderImGui()
 			m_OpenGL.shader->use();
 			Utils::initTime();
 		}
+		
+		ImGui::Separator();
+
 		ImGui::TextColored(ImVec4(1, 1, 0, 1), "System Info: ");
 		ImGui::BeginTable("System Info", 2);
 		{
@@ -52,7 +55,17 @@ void Renderer::renderImGui()
 			renderImGuiTableRow("Time", std::to_string(Utils::getTime()).c_str());
 			renderImGuiTableRow("Frame", std::to_string(Utils::getFrame()).c_str());
 		}
+		ImGui::EndTable();
 
+		ImGui::Separator();
+
+		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Camera: ");
+		ImGui::BeginTable("System Info", 2);
+		{
+			renderImGuiTableRow("Position", glm::to_string(m_Camera.GetPosition()).c_str());
+			renderImGuiTableRow("Direction", glm::to_string(m_Camera.GetDirection()).c_str());
+			renderImGuiTableRow("Rotation Speed", std::to_string(m_Camera.GetRotationSpeed()).c_str());
+		}
 		ImGui::EndTable();
 		ImGui::End();
 	}
@@ -104,6 +117,9 @@ void Renderer::prepareOpenGL()
 	m_OpenGL.setShaderProgram(shader);
 	m_OpenGL.shader->use();
 	m_Shader = shader;
+
+	currentFrame = glfwGetTime();
+	lastFrame = currentFrame;
 	LOG_INFO("Finished preparing OpenGL");
 }
 
@@ -114,6 +130,7 @@ void Renderer::renderOpenGL()
 
 	int xsize, ysize;
 	glfwGetFramebufferSize(m_Window, &xsize, &ysize);
+	m_Camera.OnResize(xsize, ysize);
 	m_Shader.setFloat2("u_resolution", glm::vec2(xsize, ysize));
 	m_Shader.setFloat("u_aspectRatio", xsize / ysize);
 	auto time = Utils::getTime();
@@ -121,9 +138,23 @@ void Renderer::renderOpenGL()
 	auto frame = Utils::getFrame();
 	m_Shader.setFloat("u_frame", frame);
 
+	auto rayOrigin = m_Camera.GetPosition();
+	m_Shader.setFloat3("u_rayOrigin", rayOrigin);
+	auto inverseView = m_Camera.GetInverseView();
+	m_Shader.setMat4("u_inverseView", inverseView);
+	auto inverseProjection = m_Camera.GetInverseProjection();
+	m_Shader.setMat4("u_inverseProjection", inverseProjection);
+
 	glBindVertexArray(m_OpenGL.VAO); 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_OpenGL.EBO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+	currentFrame = glfwGetTime();
+	deltaTime = currentFrame - lastFrame;
+	lastFrame = currentFrame;
+
+
+	m_Camera.OnUpdate(deltaTime);
 }
 
 void Renderer::toggleImGui()

@@ -13,6 +13,8 @@ project "Editor"
     files { "Editor/src/**.h", "Editor/src/**.cpp" }
     includedirs { "Editor/src" }
 
+    defines { "GLM_ENABLE_EXPERIMENTAL"}
+
     filter "system:windows"
         defines { "PLATFORM_WINDOWS" }
 

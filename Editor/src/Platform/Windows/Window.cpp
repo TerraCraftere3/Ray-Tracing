@@ -1,7 +1,7 @@
+#ifdef PLATFORM_WINDOWS
 #include "Window.h"
 #include "Core/Log.h"
 
-#ifdef PLATFORM_WINDOWS
 Window::Window(std::string title, int width, int height)
 {
 	if (!glfwInit())
@@ -9,6 +9,13 @@ Window::Window(std::string title, int width, int height)
 		LOG_CRITICAL("Failed to initialize GLFW");
 		return;
 	}
+
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+#ifdef __APPLE__
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
 
 	m_Window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
 	if (!m_Window)
@@ -20,6 +27,10 @@ Window::Window(std::string title, int width, int height)
 	LOG_INFO("Window created successfully: {} ({}x{})", title, width, height);
 
 	glfwMakeContextCurrent(m_Window);
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	{
+		LOG_CRITICAL("Failed to initialize GLAD");
+	}
 	glfwSwapInterval(1); // Enable VSync
 }
 

@@ -77,7 +77,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>PLATFORM_WINDOWS;CONFIGURATION_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLM_ENABLE_EXPERIMENTAL;PLATFORM_WINDOWS;CONFIGURATION_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
@@ -93,7 +93,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>PLATFORM_WINDOWS;CONFIGURATION_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLM_ENABLE_EXPERIMENTAL;PLATFORM_WINDOWS;CONFIGURATION_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Full</Optimization>
@@ -115,7 +115,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>PLATFORM_WINDOWS;CONFIGURATION_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLM_ENABLE_EXPERIMENTAL;PLATFORM_WINDOWS;CONFIGURATION_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>None</DebugInformationFormat>
       <Optimization>Full</Optimization>
@@ -134,13 +134,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Core\Core.h" />
     <ClInclude Include="src\Core\Log.h" />
+    <ClInclude Include="src\Platform\Image.h" />
     <ClInclude Include="src\Platform\ImGui.h" />
+    <ClInclude Include="src\Platform\Input.h" />
     <ClInclude Include="src\Platform\Platform.h" />
     <ClInclude Include="src\Platform\Window.h" />
+    <ClInclude Include="src\Platform\Windows\Image.h" />
+    <ClInclude Include="src\Platform\Windows\ImGuiManager.h" />
+    <ClInclude Include="src\Platform\Windows\Input.h" />
+    <ClInclude Include="src\Platform\Windows\Window.h" />
     <ClInclude Include="src\Platform\Windows\imconfig.h" />
     <ClInclude Include="src\Platform\Windows\imgui.h" />
-    <ClInclude Include="src\Platform\Windows\ImGuiManager.h" />
     <ClInclude Include="src\Platform\Windows\imgui_impl_glfw.h" />
     <ClInclude Include="src\Platform\Windows\imgui_impl_opengl3.h" />
     <ClInclude Include="src\Platform\Windows\imgui_impl_opengl3_loader.h" />
@@ -148,19 +154,24 @@
     <ClInclude Include="src\Platform\Windows\imstb_rectpack.h" />
     <ClInclude Include="src\Platform\Windows\imstb_textedit.h" />
     <ClInclude Include="src\Platform\Windows\imstb_truetype.h" />
-    <ClInclude Include="src\Platform\Windows\Window.h" />
+    <ClInclude Include="src\Rendering\Camera.h" />
+    <ClInclude Include="src\Rendering\Ray.h" />
+    <ClInclude Include="src\Rendering\Renderer.h" />
+    <ClInclude Include="src\Rendering\Scene.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp" />
-    <ClCompile Include="src\Platform\Windows\imgui.cpp" />
     <ClCompile Include="src\Platform\Windows\ImGuiManager.cpp" />
+    <ClCompile Include="src\Platform\Windows\Window.cpp" />
+    <ClCompile Include="src\Platform\Windows\imgui.cpp" />
     <ClCompile Include="src\Platform\Windows\imgui_demo.cpp" />
     <ClCompile Include="src\Platform\Windows\imgui_draw.cpp" />
     <ClCompile Include="src\Platform\Windows\imgui_impl_glfw.cpp" />
     <ClCompile Include="src\Platform\Windows\imgui_impl_opengl3.cpp" />
     <ClCompile Include="src\Platform\Windows\imgui_tables.cpp" />
     <ClCompile Include="src\Platform\Windows\imgui_widgets.cpp" />
-    <ClCompile Include="src\Platform\Windows\Window.cpp" />
+    <ClCompile Include="src\Rendering\Camera.cpp" />
+    <ClCompile Include="src\Rendering\Renderer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

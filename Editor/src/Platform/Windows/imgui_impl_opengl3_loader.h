@@ -1,3 +1,4 @@
+#ifdef PLATFORM_WINDOWS
 //-----------------------------------------------------------------------------
 // About imgui_impl_opengl3_loader.h:
 //
@@ -912,5 +913,6 @@ static void load_procs(GL3WGetProcAddressProc proc)
 
 #ifdef __cplusplus
 }
+#endif
 #endif
 #endif

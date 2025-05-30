@@ -1,3 +1,4 @@
+#ifdef PLATFORM_WINDOWS
 // dear imgui: Platform Backend for GLFW
 // This needs to be used along with a Renderer (e.g. OpenGL3, Vulkan, WebGPU..)
 // (Info: GLFW is a cross-platform general purpose library for handling windows, inputs, OpenGL/Vulkan graphics context creation, etc.)
@@ -99,6 +100,7 @@
 #endif
 
 // GLFW
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #ifdef _WIN32
@@ -939,3 +941,4 @@ void ImGui_ImplGlfw_InstallEmscriptenCallbacks(GLFWwindow* window, const char* c
 #endif
 
 #endif // #ifndef IMGUI_DISABLE
+#endif

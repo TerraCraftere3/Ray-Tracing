@@ -14,4 +14,7 @@ public:
 	void shutdown();
 	void beginFrame();
 	void endFrame();
+private:
+	Window* m_Window;
+	ImGuiContext* m_Context = nullptr;
 };

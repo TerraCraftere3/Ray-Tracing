@@ -182,6 +182,7 @@ glm::vec4 Renderer::PerPixel(uint32_t x, uint32_t y)
 				skycolor = mix(bottomColor, horizonColor, nt);
 			}
 			light += skycolor * contribution;
+			//light += contribution;
 			break;
 		}
 
@@ -195,7 +196,7 @@ glm::vec4 Renderer::PerPixel(uint32_t x, uint32_t y)
 		contribution *= vec3(mat.Albedo.Sample(payload.UV));
 
 		ray.Origin = payload.WorldPosition + payload.WorldNormal * 0.0001f;
-		ray.Direction = reflect(ray.Direction, payload.WorldNormal + mat.Roughness * Utils::RandomInUnitSphere(seed));
+		ray.Direction = reflect(ray.Direction, payload.WorldNormal + mat.Roughness.Sample(payload.UV).x * Utils::RandomInUnitSphere(seed));
 	}
 
 	return vec4(light, 1);

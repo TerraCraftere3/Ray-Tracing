@@ -84,6 +84,7 @@
     <ClInclude Include="src\Rendering\Texture.h" />
     <ClInclude Include="src\Platform\Common\stb_image.h" />
     <ClInclude Include="src\Platform\stb_image.h" />
+    <ClInclude Include="src\Rendering\TextureLibrary.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp" />

@@ -7,6 +7,7 @@ using namespace glm;
 
 Texture::Texture(std::string path)
 {
+    m_Path = path;
 	LoadTexture(path.c_str());
 }
 
@@ -22,12 +23,17 @@ uint32_t Texture::GetHeight() const
 
 uint32_t Texture::GetID() const
 {
-    return 0;
+    return m_TextureID;
 }
 
 bool Texture::IsValid() const
 {
     return textureData;
+}
+
+std::string Texture::GetPath() const
+{
+    return m_Path;
 }
 
 glm::vec4 Texture::Sample(float u, float v) const
@@ -55,14 +61,35 @@ glm::vec4 Texture::Sample(glm::vec2 uv) const
 
 bool Texture::LoadTexture(const char* filename)
 {
-    //stbi_set_flip_vertically_on_load(true);
-
     textureData = stbi_load(filename, &m_Width, &m_Height, &m_Channels, 0);
     if (!textureData) {
         LOG_ERROR("Failed to load texture: {}", filename);
         return false;
     }
 
-    LOG_INFO("Loaded texture: {} ({}x{}, {} channels)", filename, m_Width, m_Height, m_Channels);
+    GLenum format;
+    switch (m_Channels) {
+    case 1: format = GL_RED; break;
+    case 3: format = GL_RGB; break;
+    case 4: format = GL_RGBA; break;
+    default: format = GL_RGB; break;
+    }
+
+    glGenTextures(1, &m_TextureID);
+    glBindTexture(GL_TEXTURE_2D, m_TextureID);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, format, m_Width, m_Height, 0, format, GL_UNSIGNED_BYTE, textureData);
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    // Set texture parameters (basic)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glBindTexture(GL_TEXTURE_2D, 0); // Unbind
+
+    LOG_INFO("Loaded texture: {} ({}x{}, {} channels) -> OpenGL ID: {}", filename, m_Width, m_Height, m_Channels, m_TextureID);
+
     return true;
 }

@@ -161,6 +161,7 @@
     <ClInclude Include="src\Rendering\Renderer.h" />
     <ClInclude Include="src\Rendering\Scene.h" />
     <ClInclude Include="src\Rendering\Texture.h" />
+    <ClInclude Include="src\Rendering\TextureLibrary.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp" />

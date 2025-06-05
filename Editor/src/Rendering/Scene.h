@@ -2,12 +2,12 @@
 
 #include <glm/glm.hpp>
 #include <vector>
-#include "Texture.h"
+#include "TextureLibrary.h"
 
 struct Material {
-	Texture Albedo{ "textures/debug.png" };
-	float Roughness = 1.0f;
-	float Metallic = 0.0f;
+	Texture Albedo = TextureDebug();
+	Texture Roughness = TextureEmpty();
+	Texture Metallic = TextureEmpty();
 
 	glm::vec3 EmissionColor{ 0.0f };
 	float EmissionStrength = 0.0f;

@@ -196,6 +196,12 @@ int main()
 			m.EmissionStrength = 2;
 			scene.Materials.push_back(m);
 		}
+		{
+			Material m;
+			m.isGlass = true;
+			m.Albedo = CreateColorTexture(1, 1, 1);
+			scene.Materials.push_back(m);
+		}
 	}
 
 #define IMGUI_CONTROL_WITH_RESET(Func) \

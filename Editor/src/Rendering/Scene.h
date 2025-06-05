@@ -5,12 +5,13 @@
 #include "TextureLibrary.h"
 
 struct Material {
-	Texture Albedo = TextureDebug();
-	Texture Roughness = TextureEmpty();
-	Texture Metallic = TextureEmpty();
+	Texture Albedo = CreateColorTexture(1, 1, 1);
+	Texture Roughness = CreateColorTexture(1, 1, 1);
+	Texture Metallic = CreateColorTexture(1, 1, 1);
 
 	glm::vec3 EmissionColor{ 0.0f };
 	float EmissionStrength = 0.0f;
+	bool isGlass = false;
 
 	glm::vec3 GetEmission() const {
 		return EmissionColor * EmissionStrength;

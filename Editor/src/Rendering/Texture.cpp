@@ -11,6 +11,12 @@ Texture::Texture(std::string path)
 	LoadTexture(path.c_str());
 }
 
+Texture::Texture(glm::vec3 color, const char* path)
+{
+    m_Path = path;
+    LoadColor(color);
+}
+
 uint32_t Texture::GetWidth() const
 {
     return m_Width;
@@ -62,11 +68,33 @@ glm::vec4 Texture::Sample(glm::vec2 uv) const
 bool Texture::LoadTexture(const char* filename)
 {
     textureData = stbi_load(filename, &m_Width, &m_Height, &m_Channels, 0);
-    if (!textureData) {
+    if (!textureData && !m_TextureNotFound) {
         LOG_ERROR("Failed to load texture: {}", filename);
+        m_TextureNotFound = true;
+		LoadColor(ErrorColorRGB); // Load purple
         return false;
     }
 
+    return UploadTexture();
+}
+
+bool Texture::LoadColor(glm::vec3 color)
+{
+    m_Width = 1;
+    m_Height = 1;
+    m_Channels = 4; // RGBA
+    m_TextureID = 0;
+    textureData = new unsigned char[4];
+    textureData[0] = static_cast<unsigned char>(color.r * 255);
+    textureData[1] = static_cast<unsigned char>(color.g * 255);
+    textureData[2] = static_cast<unsigned char>(color.b * 255);
+    textureData[3] = 255;
+
+    return UploadTexture();
+}
+
+bool Texture::UploadTexture()
+{
     GLenum format;
     switch (m_Channels) {
     case 1: format = GL_RED; break;
@@ -89,7 +117,6 @@ bool Texture::LoadTexture(const char* filename)
 
     glBindTexture(GL_TEXTURE_2D, 0); // Unbind
 
-    LOG_INFO("Loaded texture: {} ({}x{}, {} channels) -> OpenGL ID: {}", filename, m_Width, m_Height, m_Channels, m_TextureID);
-
+    LOG_INFO("Loaded texture: {} ({}x{}, {} channels) -> OpenGL ID: {}", m_Path, m_Width, m_Height, m_Channels, m_TextureID);
     return true;
 }

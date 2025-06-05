@@ -56,21 +56,18 @@ int main()
 		}
 		{
 			Material m;
-			m.Albedo = { 1.0f, 0.0f, 1.0f };
 			m.Roughness = 1.0f;
 			scene.Materials.push_back(m);
 		}
 		{
 			Material m;
-			m.Albedo = { 0.2f, 0.3f, 1.0f };
 			m.Roughness = 0.1f;
 			scene.Materials.push_back(m);
 		}
 		{
 			Material m;
-			m.Albedo = { 0.8f, 0.5f, 0.2f };
 			m.Roughness = 0.1f;
-			m.EmissionColor = m.Albedo;
+			m.EmissionColor = { 0.8f, 0.5f, 0.2f };
 			m.EmissionStrength = 2;
 			scene.Materials.push_back(m);
 		}
@@ -121,7 +118,6 @@ int main()
 		for (size_t i = 0; i < scene.Materials.size(); i++) {
 			auto& material = scene.Materials[i];
 			ImGui::PushID(i);
-			IMGUI_CONTROL_WITH_RESET(ImGui::ColorEdit3("Albedo", glm::value_ptr(material.Albedo)));
 			IMGUI_CONTROL_WITH_RESET(ImGui::DragFloat("Roughness", &material.Roughness, 0.01f, 0.0f, 1.0f));
 			IMGUI_CONTROL_WITH_RESET(ImGui::DragFloat("Metallic", &material.Metallic, 0.01f, 0.0f, 1.0f));
 			IMGUI_CONTROL_WITH_RESET(ImGui::ColorEdit3("Emission Color", glm::value_ptr(material.EmissionColor)));

@@ -1,5 +1,6 @@
 #include "Renderer.h"
 #include <execution>
+#include <glm/ext/scalar_constants.hpp>
 
 using namespace glm;
 
@@ -191,7 +192,7 @@ glm::vec4 Renderer::PerPixel(uint32_t x, uint32_t y)
 		if (length(mat.GetEmission()) > 0.0f)
 			break;
 
-		contribution *= mat.Albedo;
+		contribution *= vec3(mat.Albedo.Sample(payload.UV));
 
 		ray.Origin = payload.WorldPosition + payload.WorldNormal * 0.0001f;
 		ray.Direction = reflect(ray.Direction, payload.WorldNormal + mat.Roughness * Utils::RandomInUnitSphere(seed));
@@ -210,10 +211,16 @@ HitPayload Renderer::ClosestHit(const Ray& ray, float HitDistance, int ObjectInd
 	const Sphere& closestSphere = m_ActiveScene->Spheres[ObjectIndex];
 
 	vec3 origin = ray.Origin - closestSphere.Position;
+	vec3 localPosition = origin + HitDistance * ray.Direction;
 	payload.WorldPosition = origin + HitDistance * ray.Direction;
 	payload.WorldNormal = normalize(payload.WorldPosition);
 
 	payload.WorldPosition += closestSphere.Position; // Convert to world space
+
+	vec3 p = normalize(localPosition);
+	float u = 0.5f + atan2(p.z, p.x) / (2.0f * glm::pi<float>());
+	float v = 0.5f - asin(p.y) / glm::pi<float>();
+	payload.UV = vec2(u, v);
 
 	return payload;
 }

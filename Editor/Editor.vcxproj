@@ -136,10 +136,12 @@
   <ItemGroup>
     <ClInclude Include="src\Core\Core.h" />
     <ClInclude Include="src\Core\Log.h" />
+    <ClInclude Include="src\Platform\Common\stb_image.h" />
     <ClInclude Include="src\Platform\Image.h" />
     <ClInclude Include="src\Platform\ImGui.h" />
     <ClInclude Include="src\Platform\Input.h" />
     <ClInclude Include="src\Platform\Platform.h" />
+    <ClInclude Include="src\Platform\stb_image.h" />
     <ClInclude Include="src\Platform\Window.h" />
     <ClInclude Include="src\Platform\Windows\Image.h" />
     <ClInclude Include="src\Platform\Windows\ImGuiManager.h" />
@@ -158,6 +160,7 @@
     <ClInclude Include="src\Rendering\Ray.h" />
     <ClInclude Include="src\Rendering\Renderer.h" />
     <ClInclude Include="src\Rendering\Scene.h" />
+    <ClInclude Include="src\Rendering\Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp" />
@@ -172,6 +175,7 @@
     <ClCompile Include="src\Platform\Windows\imgui_widgets.cpp" />
     <ClCompile Include="src\Rendering\Camera.cpp" />
     <ClCompile Include="src\Rendering\Renderer.cpp" />
+    <ClCompile Include="src\Rendering\Texture.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

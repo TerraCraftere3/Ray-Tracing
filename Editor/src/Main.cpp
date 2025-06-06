@@ -179,7 +179,7 @@ bool ShowScene(Scene* scene, const Renderer* renderer)
 			ImGui::TreePop();
 		}
 
-		if (ImGui::TreeNodeEx("Spheres", flag))
+		if (ImGui::TreeNodeEx("Meshes", flag))
 		{
 			for (int i = 0; i < scene->Meshes.size(); i++)
 			{
@@ -343,7 +343,7 @@ int main()
 	float deltaTime = 0.0f;
 	float frameTime = 0.0f;
 	float fps = 0.0f;
-	float renderSize = 1.0f;
+	float renderSize = 0.5f;
 
 	{
 		{
@@ -375,6 +375,7 @@ int main()
 			if (LoadOBJMesh("models/suzanne.obj", suzanneMesh)) {
 				suzanneMesh.name = "Suzanne";
 				suzanneMesh.MaterialIndex = 3;
+				suzanneMesh.Scale = { 0.5f, 0.5f, 0.5f };
 				scene.Meshes.push_back(suzanneMesh);
 			}
 			else {

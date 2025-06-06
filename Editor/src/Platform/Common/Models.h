@@ -81,5 +81,8 @@ bool LoadOBJMesh(const std::string& filepath, Mesh& meshOut)
         }
     }
 
+	LOG_INFO("Loaded OBJ mesh from {}: {} vertices, {} normals, {} UVs, {} indices",
+		filepath, meshOut.Vertices.size(), meshOut.Normals.size(), meshOut.UVs.size(), meshOut.Indices.size());
+
     return true;
 }

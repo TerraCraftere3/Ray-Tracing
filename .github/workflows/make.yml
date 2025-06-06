@@ -27,7 +27,7 @@ jobs:
 
     - name: Run setup script
       run: |
-        chmod +x ./Setup.sh
+        sudo chmod +x ./Setup.sh
         ./Setup.sh
 
     - name: Compile the project

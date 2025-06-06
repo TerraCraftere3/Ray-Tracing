@@ -13,6 +13,7 @@ public:
 	Texture(std::string path);
 	Texture(glm::vec4 color, const char* path); // Path can be any char string
 	Texture(const char* path) : Texture(std::string(path)) {}
+	bool LoadTexture(const char* filename);
 	uint32_t GetWidth() const;
 	uint32_t GetHeight() const;
 	uint32_t GetID() const;
@@ -22,7 +23,6 @@ public:
 	glm::vec4 Sample(float u, float v) const;
 	glm::vec4 Sample(glm::vec2 uv) const;
 private:
-	bool LoadTexture(const char* filename);
 	bool LoadColor(glm::vec4 color);
 	bool UploadTexture();
 	int m_Width, m_Height, m_Channels;

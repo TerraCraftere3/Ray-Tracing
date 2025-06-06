@@ -29,6 +29,43 @@ bool ShowMaterial(Material& mat)
 			mat.name = nameBuffer; // Update the original string
 		}
 
+		{
+			char pathBuffer[256];
+			strncpy(pathBuffer, mat.Albedo.GetPath().c_str(), sizeof(pathBuffer));
+			pathBuffer[sizeof(pathBuffer) - 1] = '\0'; // Ensure null termination
+			if (ImGui::InputText("Albedo Texture", pathBuffer, sizeof(pathBuffer))) {
+				edited = true;
+				mat.Albedo.LoadTexture(pathBuffer);
+			}
+		}
+		{
+			char pathBuffer[256];
+			strncpy(pathBuffer, mat.Normal.GetPath().c_str(), sizeof(pathBuffer));
+			pathBuffer[sizeof(pathBuffer) - 1] = '\0'; // Ensure null termination
+			if (ImGui::InputText("Normal Texture", pathBuffer, sizeof(pathBuffer))) {
+				edited = true;
+				mat.Normal.LoadTexture(pathBuffer);
+			}
+		}
+		{
+			char pathBuffer[256];
+			strncpy(pathBuffer, mat.Metallic.GetPath().c_str(), sizeof(pathBuffer));
+			pathBuffer[sizeof(pathBuffer) - 1] = '\0'; // Ensure null termination
+			if (ImGui::InputText("Metallic Texture", pathBuffer, sizeof(pathBuffer))) {
+				edited = true;
+				mat.Metallic.LoadTexture(pathBuffer);
+			}
+		}
+		{
+			char pathBuffer[256];
+			strncpy(pathBuffer, mat.Roughness.GetPath().c_str(), sizeof(pathBuffer));
+			pathBuffer[sizeof(pathBuffer) - 1] = '\0'; // Ensure null termination
+			if (ImGui::InputText("Roughness Texture", pathBuffer, sizeof(pathBuffer))) {
+				edited = true;
+				mat.Roughness.LoadTexture(pathBuffer);
+			}
+		}
+
 		if (ImGui::ColorEdit3("Emission Color", glm::value_ptr(mat.EmissionColor))) edited = true;
 		if (ImGui::InputFloat("Emission Strength", &mat.EmissionStrength)) edited = true;
 
@@ -143,7 +180,7 @@ void ShowTextureLibrary()
 {
 	static std::optional<std::string> selectedTexturePath;
 
-	const float thumbnailSize = 64.0f;
+	const float thumbnailSize = 100.0f;
 	const float padding = 8.0f;
 	const float cellSize = thumbnailSize + padding;
 
@@ -237,28 +274,6 @@ void ShowTextureLibrary()
 	ImGui::EndChild();
 }
 
-void DisplayImage(const Texture& texture, const std::string& label)
-{
-	ImTextureID myImage = texture.GetID();
-	ImVec2 imageSize = ImVec2(256, 256);
-
-	static std::unordered_map<ImGuiID, bool> showImageMap;
-
-	// Push a unique ID to separate this UI block
-	ImGui::PushID(label.c_str()); // Ensures uniqueness per call
-	ImGui::Text("%s: %s", label.c_str(), texture.GetPath().c_str());
-	ImGuiID id = ImGui::GetID("image_toggle"); // Unique ID inside pushed context
-
-	if (ImGui::IsItemClicked()) {
-		showImageMap[id] = !showImageMap[id];
-	}
-
-	if (showImageMap[id]) {
-		ImGui::Image(myImage, imageSize);
-	}
-	ImGui::PopID();
-}
-
 int main()
 {
     Logger::Init();
@@ -311,6 +326,7 @@ int main()
 			m.name = "Rock Wall";
 			m.Albedo = CreateTexture("textures/rock/rock-wall-mortar_albedo.png");
 			m.Roughness = CreateTexture("textures/rock/rock-wall-mortar_roughness.png");
+			m.Metallic = CreateTexture("textures/rock/rock-wall-mortar_metallic.png");
 			m.Normal = CreateTexture("textures/rock/rock-wall-mortar_normal-ogl.png");
 			scene.Materials.push_back(m);
 		}
@@ -319,6 +335,7 @@ int main()
 			m.name = "Rough Plaster";
 			m.Albedo = CreateTexture("textures/plaster/rough-plaster-basecolor.png");
 			m.Roughness = CreateTexture("textures/plaster/rough-plaster-roughness.png");
+			m.Metallic = CreateTexture("textures/plaster/rough-plaster-metallic.png");	
 			m.Normal = CreateTexture("textures/plaster/rough-plaster-normal-ogl.png");	
 			scene.Materials.push_back(m);
 		}
@@ -331,15 +348,20 @@ int main()
 		}
 		{
 			Material m;
-			m.name = "Glass";
-			m.isGlass = true;
-			m.Albedo = CreateColorTextureRGB(1, 1, 1);
+			m.name = "Gold";
+			m.Albedo = CreateTexture("textures/gold/lightgold_albedo.png");
+			m.Roughness = CreateTexture("textures/gold/lightgold_roughness.png");
+			m.Metallic = CreateTexture("textures/gold/lightgold_metallic.png");
+			m.Normal = CreateTexture("textures/gold/lightgold_normal-ogl.png");
 			scene.Materials.push_back(m);
 		}
 	}
 
 #define IMGUI_CONTROL_WITH_RESET(Func) \
 	if (Func) renderer.ResetFrameIndex()
+
+#define IMGUI_CONTROL_WITH_RESET_WITH_CALLBACK(Func, Callback) \
+	if (Func) { renderer.ResetFrameIndex(); Callback; }
 
 	while (!window.shouldClose())
 	{
@@ -351,7 +373,7 @@ int main()
 		ImGui::Text("Frame Time: %.2f ms", frameTime);
 		ImGui::Checkbox("Multi-threaded", &renderer.GetSettings().MultiThreaded);
 		ImGui::Checkbox("Accumulate", &renderer.GetSettings().Accumulate);
-		IMGUI_CONTROL_WITH_RESET(ImGui::DragFloat("Render Size", &renderSize, 0.01f, 0.1f, 2.0f, "%.2f"));
+		IMGUI_CONTROL_WITH_RESET_WITH_CALLBACK(ImGui::DragFloat("Render Size", &renderSize, 0.01f, 0.1f, 2.0f, "%.2f"), renderSize = glm::clamp(renderSize, 0.1f, 2.0f));
 		if (ImGui::Button("Reset")) {
 			renderer.ResetFrameIndex();
 		}

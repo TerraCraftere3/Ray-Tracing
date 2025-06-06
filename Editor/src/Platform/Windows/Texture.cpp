@@ -8,7 +8,6 @@ using namespace glm;
 
 Texture::Texture(std::string path)
 {
-    m_Path = path;
     LoadTexture(path.c_str());
 }
 
@@ -68,6 +67,7 @@ glm::vec4 Texture::Sample(glm::vec2 uv) const
 
 bool Texture::LoadTexture(const char* filename)
 {
+	m_Path = filename;
     textureData = stbi_load(filename, &m_Width, &m_Height, &m_Channels, 0);
     if (!textureData && !m_TextureNotFound) {
         LOG_ERROR("Failed to load texture: {}", filename);
@@ -103,6 +103,9 @@ bool Texture::UploadTexture()
     case 4: format = GL_RGBA; break;
     default: format = GL_RGB; break;
     }
+	if (m_TextureID != 0) {
+		glDeleteTextures(1, &m_TextureID);
+	}
 
     glGenTextures(1, &m_TextureID);
     glBindTexture(GL_TEXTURE_2D, m_TextureID);

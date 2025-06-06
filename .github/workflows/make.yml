@@ -25,10 +25,5 @@ jobs:
           libxcursor-dev \
           libgl1-mesa-dev
 
-    - name: Run setup script
-      run: |
-        sudo chmod +x ./Setup.sh
-        ./Setup.sh
-
     - name: Compile the project
       run: make config=release

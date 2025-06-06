@@ -2,6 +2,6 @@
 
 #ifdef PLATFORM_WINDOWS
 
-#elif PLATFORM_LINUX
+#elif defined(PLATFORM_LINUX)
 
 #endif

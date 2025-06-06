@@ -1,4 +1,4 @@
-
+#ifdef PLATFORM_LINUX
 
 // dear imgui, v1.92.0 WIP
 // (demo code)
@@ -11068,3 +11068,4 @@ void ImGui::ShowFontSelector(const char* label) {}
 #endif
 
 #endif // #ifndef IMGUI_DISABLE
+#endif

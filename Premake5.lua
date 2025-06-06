@@ -11,21 +11,40 @@ local function disableVcpkg(prj)
     premake.w('<VcpkgAutoLink>false</VcpkgAutoLink>')
 end
 
+local function getPlatformName()
+    if os.host() == "windows" then
+        return "Windows"
+    elseif os.host() == "linux" then
+        return "Linux"
+    else
+        return "Unknown"
+    end
+end
+
 project "Editor"
     location "Editor"
     kind "ConsoleApp"
     architecture "x64"
     language "C++"
     cppdialect "C++latest"
-    targetdir ("bin/%{cfg.buildcfg}-%{cfg.architecture}")
-    objdir ("bin-int/%{cfg.buildcfg}-%{cfg.architecture}")
-    files { "Editor/src/Core/**.h", "Editor/src/Core/**.cpp", "Editor/src/Core/**.c",
-        "Editor/src/Platform/**.h", "Editor/src/Platform/**.cpp", "Editor/src/Platform/**.c",
-        "Editor/src/Rendering/**.h", "Editor/src/Rendering/**.cpp", "Editor/src/Rendering/**.c",
-        "Editor/src/Vendor/glad/**.h", "Editor/src/Vendor/glad/**.cpp", "Editor/src/Vendor/glad/**.c",
-        "Editor/src/Vendor/glm/**.h", "Editor/src/Vendor/glm/**.cpp", "Editor/src/Vendor/glm/**.c",
-        "Editor/src/Vendor/spdlog/**.h", "Editor/src/Vendor/spdlog/**.cpp", "Editor/src/Vendor/spdlog/**.c",
+    files {
+        "Editor/src/Core/**.h",          "Editor/src/Core/**.cpp",          "Editor/src/Core/**.c",
+        "Editor/src/Rendering/**.h",     "Editor/src/Rendering/**.cpp",     "Editor/src/Rendering/**.c",
         "Editor/src/Main.cpp",
+
+        -- Platform Specific --
+        "Editor/src/Platform/Common/*",
+        "Editor/src/Platform/Image.h",
+        "Editor/src/Platform/ImGui.h",
+        "Editor/src/Platform/Input.h",
+        "Editor/src/Platform/Platform.h",
+        "Editor/src/Platform/stb_image.h",
+        "Editor/src/Platform/Window.h",
+
+        -- Libraries --
+        "Editor/src/Vendor/glad/**.h",   "Editor/src/Vendor/glad/**.cpp",   "Editor/src/Vendor/glad/**.c",
+        "Editor/src/Vendor/glm/**.h",    "Editor/src/Vendor/glm/**.cpp",    "Editor/src/Vendor/glm/**.c",
+        "Editor/src/Vendor/spdlog/**.h", "Editor/src/Vendor/spdlog/**.cpp", "Editor/src/Vendor/spdlog/**.c",
 
         -- GLFW --
         "Editor/src/vendor/glfw/src/context.c",
@@ -46,6 +65,12 @@ project "Editor"
 
     defines { "GLM_ENABLE_EXPERIMENTAL", "SPDLOG_COMPILED_LIB"}
 
+    local platformName = getPlatformName()
+
+    targetdir ("bin/".. platformName .."-%{cfg.buildcfg}-%{cfg.architecture}")
+    debugdir ("bin/".. platformName .."-%{cfg.buildcfg}-%{cfg.architecture}")
+    objdir ("bin-int/".. platformName .."-%{cfg.buildcfg}-%{cfg.architecture}")
+
     filter "action:vs*"
         buildoptions { "/utf-8" }
         defines { "FMT_UNICODE=0" }
@@ -58,9 +83,13 @@ project "Editor"
             "Editor/src/vendor/glfw/src/win32_*.c",
             "Editor/src/vendor/glfw/src/wgl_context.c",
             "Editor/src/vendor/glfw/src/egl_context.c",
-            "Editor/src/vendor/glfw/src/osmesa_context.c"
+            "Editor/src/vendor/glfw/src/osmesa_context.c",
+            "Editor/src/Platform/Windows/**.h", "Editor/src/Platform/Windows/**.cpp", "Editor/src/Platform/Windows/**.c",
         }
         links { "opengl32" }
+        postbuildcommands {
+            ("xcopy /E /I /Y \"%{wks.location}Editor\\runtime\\*\" \"%{cfg.targetdir}\\\"")
+        }
 
     filter "system:linux"
         defines { "PLATFORM_LINUX" }
@@ -69,9 +98,17 @@ project "Editor"
         files {
             "Editor/src/vendor/glfw/src/x11_*.c",
             "Editor/src/vendor/glfw/src/glx_context.c",
-            "Editor/src/vendor/glfw/src/posix_*.c"
+            "Editor/src/vendor/glfw/src/posix_*.c",
+            "Editor/src/vendor/glfw/src/xkb_unicode.c",
+            "Editor/src/vendor/glfw/src/linux_joystick.c",
+            "Editor/src/vendor/glfw/src/egl_context.c",
+            "Editor/src/vendor/glfw/src/osmesa_context.c",
+            "Editor/src/Platform/Linux/**.h", "Editor/src/Platform/Linux/**.cpp", "Editor/src/Platform/Linux/**.c",
         }
         links { "GL", "X11", "pthread", "dl" }
+        postbuildcommands {
+            ("cp -r %{wks.location}Editor/runtime/. %{cfg.targetdir}/")
+        }
 
     filter "configurations:Debug"
         defines { "CONFIGURATION_DEBUG" }
@@ -87,6 +124,8 @@ project "Editor"
         defines { "CONFIGURATION_DIST" }
         optimize "Full"
         symbols "Off"
+
+    filter {}
 
 premake.override(premake.vstudio.vc2010.elements, "globals", function(base, prj)
     local calls = base(prj)

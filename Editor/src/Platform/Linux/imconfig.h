@@ -1,4 +1,4 @@
-
+#ifdef PLATFORM_LINUX
 
 //-----------------------------------------------------------------------------
 // DEAR IMGUI COMPILE-TIME OPTIONS
@@ -141,3 +141,4 @@ namespace ImGui
     void MyFunction(const char* name, MyMatrix44* mtx);
 }
 */
+#endif

@@ -3,6 +3,6 @@
 
 #ifdef PLATFORM_WINDOWS
 #include "Windows/ImGuiManager.h"
-#else
-#error "Only Windows Support for ImGui.h!!!"
+#elif defined(PLATFORM_LINUX)
+#include "Linux/ImGuiManager.h"
 #endif

@@ -1,3 +1,4 @@
+#ifdef PLATFORM_LINUX
 #include "ImGuiManager.h"
 #include <Core/Log.h>
 
@@ -53,3 +54,4 @@ void UIManager::endFrame()
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
+#endif

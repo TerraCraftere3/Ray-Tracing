@@ -1,4 +1,3 @@
-
 #include "Rendering/Texture.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "Platform/stb_image.h"

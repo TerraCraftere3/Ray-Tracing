@@ -1,5 +1,5 @@
 #pragma once
-
+#ifdef PLATFORM_LINUX
 
 #include <glm/glm.hpp>
 #include <glad/glad.h>
@@ -157,3 +157,5 @@ public:
 private:
     static inline GLFWwindow* s_Window = nullptr;
 };
+
+#endif

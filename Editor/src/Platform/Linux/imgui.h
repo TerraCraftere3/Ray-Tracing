@@ -1,4 +1,4 @@
-
+#ifdef PLATFORM_LINUX
 
 // dear imgui, v1.92.0 WIP
 // (headers)
@@ -4050,3 +4050,4 @@ namespace ImGui
 #endif
 
 #endif // #ifndef IMGUI_DISABLE
+#endif

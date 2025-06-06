@@ -1,4 +1,4 @@
-
+#ifdef PLATFORM_LINUX
 
 // dear imgui: Platform Backend for GLFW
 // This needs to be used along with a Renderer (e.g. OpenGL3, Vulkan, WebGPU..)
@@ -66,3 +66,4 @@ IMGUI_IMPL_API void     ImGui_ImplGlfw_MonitorCallback(GLFWmonitor* monitor, int
 IMGUI_IMPL_API void     ImGui_ImplGlfw_Sleep(int milliseconds);
 
 #endif // #ifndef IMGUI_DISABLE
+#endif

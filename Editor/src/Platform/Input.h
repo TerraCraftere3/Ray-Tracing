@@ -3,6 +3,6 @@
 
 #ifdef PLATFORM_WINDOWS
 #include "Windows/Input.h"
-#else
-#error "Only Windows Support for Input.h!!!"
+#elif defined(PLATFORM_LINUX)
+#include "Linux/Input.h"
 #endif

@@ -3,6 +3,6 @@
 
 #ifdef PLATFORM_WINDOWS
 #include "Windows/Window.h"
-#else
-#error "Only Windows Support for Window.h!!!"
+#elif defined(PLATFORM_LINUX)
+#include "Linux/Window.h"
 #endif

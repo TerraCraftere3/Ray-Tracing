@@ -3,6 +3,6 @@
 
 #ifdef PLATFORM_WINDOWS
 #include "Windows/Image.h"
-#else
-#error "Only Windows Support for Image.h!!!"
-#endif#pragma once
+#elif defined(PLATFORM_LINUX)
+#include "Linux/Image.h"
+#endif

@@ -1,4 +1,4 @@
-
+#ifdef PLATFORM_LINUX
 // dear imgui, v1.92.0 WIP
 // (internal structures/api)
 
@@ -3954,3 +3954,4 @@ extern const char*  ImGuiTestEngine_FindItemDebugLabel(ImGuiContext* ctx, ImGuiI
 #endif
 
 #endif // #ifndef IMGUI_DISABLE
+#endif

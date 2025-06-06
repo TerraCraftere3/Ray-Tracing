@@ -1,4 +1,4 @@
-
+#ifdef PLATFORM_LINUX
 
 // dear imgui, v1.92.0 WIP
 // (main code and documentation)
@@ -22988,3 +22988,4 @@ void ImGui::DebugHookIdInfo(ImGuiID, ImGuiDataType, const void*, const void*) {}
 //-----------------------------------------------------------------------------
 
 #endif // #ifndef IMGUI_DISABLE
+#endif

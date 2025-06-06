@@ -1,4 +1,4 @@
-
+#ifdef PLATFORM_LINUX
 #include "Window.h"
 #include "Core/Log.h"
 
@@ -78,3 +78,4 @@ GLFWwindow* Window::getNativeWindow()
 {
 	return m_Window;
 }
+#endif

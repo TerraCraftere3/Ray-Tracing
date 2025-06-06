@@ -1,4 +1,4 @@
-
+#ifdef PLATFORM_LINUX
 
 // dear imgui, v1.92.0 WIP
 // (widgets code)
@@ -10714,3 +10714,4 @@ void ImGui::TabItemLabelAndCloseButton(ImDrawList* draw_list, const ImRect& bb, 
 
 
 #endif // #ifndef IMGUI_DISABLE
+#endif

@@ -88,6 +88,7 @@ project "Editor"
         }
         links { "opengl32" }
         postbuildcommands {
+            ("{MKDIR} %{cfg.targetdir}"),
             ("xcopy /E /I /Y \"%{wks.location}Editor\\runtime\\*\" \"%{cfg.targetdir}\\\"")
         }
 
@@ -107,7 +108,8 @@ project "Editor"
         }
         links { "GL", "X11", "pthread", "dl" }
         postbuildcommands {
-            ("cp -r %{wks.location}Editor/runtime/. %{cfg.targetdir}/")
+            ("{MKDIR} %{cfg.targetdir}"),
+            ("ls -la \"%{cfg.targetdir}/\"")
         }
 
     filter "configurations:Debug"
@@ -126,6 +128,9 @@ project "Editor"
         symbols "Off"
 
     filter {}
+
+    -- print("Runtime path: " .. path.getabsolute("%{wks.location}Editor/runtime/"))
+    -- print("Target path: " .. path.getabsolute("%{cfg.targetdir}"))
 
 premake.override(premake.vstudio.vc2010.elements, "globals", function(base, prj)
     local calls = base(prj)

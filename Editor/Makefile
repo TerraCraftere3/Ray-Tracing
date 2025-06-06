@@ -50,7 +50,8 @@ ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O0 -g -std=c++23
 ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64
 define POSTBUILDCMDS
 	@echo Running postbuild commands
-	cp -r ..Editor/runtime/. ../bin/Linux-Debug-x86_64/
+	mkdir -p ../bin/Linux-Debug-x86_64
+	ls -la "../bin/Linux-Debug-x86_64/"
 endef
 
 else ifeq ($(config),release)
@@ -63,7 +64,8 @@ ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -g -std=c++23
 ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64
 define POSTBUILDCMDS
 	@echo Running postbuild commands
-	cp -r ..Editor/runtime/. ../bin/Linux-Release-x86_64/
+	mkdir -p ../bin/Linux-Release-x86_64
+	ls -la "../bin/Linux-Release-x86_64/"
 endef
 
 else ifeq ($(config),dist)
@@ -76,7 +78,8 @@ ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O3 -std=c++23
 ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -s
 define POSTBUILDCMDS
 	@echo Running postbuild commands
-	cp -r ..Editor/runtime/. ../bin/Linux-Dist-x86_64/
+	mkdir -p ../bin/Linux-Dist-x86_64
+	ls -la "../bin/Linux-Dist-x86_64/"
 endef
 
 endif

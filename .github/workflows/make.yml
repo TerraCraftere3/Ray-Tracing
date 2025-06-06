@@ -1,0 +1,37 @@
+name: Linux Build
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: configure
+      run: ./configure
+
+    - name: Install dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y \
+          libx11-dev \
+          libxrandr-dev \
+          libxi-dev \
+          libxinerama-dev \
+          libxcursor-dev \
+          libgl1-mesa-dev
+
+    - name: Run setup script
+      run: |
+        chmod +x ./Setup.sh
+        ./Setup.sh
+
+    - name: Compile the project
+      run: make config=release

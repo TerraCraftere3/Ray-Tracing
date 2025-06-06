@@ -4,11 +4,13 @@
 #include <vector>
 
 #define CreateTexture(path) TextureLibrary::create(path)
-#define CreateColorTexture(r, g, b) TextureLibrary::createColor(glm::vec3(r, g, b))
+#define CreateColorTextureRGB(r, g, b) TextureLibrary::createColor(glm::vec3(r, g, b))
+#define CreateColorTexture(r, g, b, a) TextureLibrary::createColor(glm::vec4(r, g, b, a))
 
 class TextureLibrary {
 public:
-	TextureLibrary() = default;
+	TextureLibrary() {
+	};
 	TextureLibrary(const TextureLibrary&) = delete;
 
 	static TextureLibrary& GetInstance() {
@@ -16,10 +18,14 @@ public:
 		return instance;
 	}
 	static Texture& createColor(glm::vec3 color) {
+		return createColor(glm::vec4(color, 1.0f));
+	}
+	static Texture& createColor(glm::vec4 color) {
 		auto& instance = GetInstance();
 		std::string path = "dynamic/color_" + std::to_string((int)(color.r * 255)) + "_" +
 			std::to_string((int)(color.g * 255)) + "_" +
-			std::to_string((int)(color.b * 255));
+			std::to_string((int)(color.b * 255)) + "_" +
+			std::to_string((int)(color.a * 255));
 		for (auto& texture : instance.textures) {
 			if (texture.GetPath() == path) {
 				return texture;

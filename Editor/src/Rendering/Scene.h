@@ -5,9 +5,9 @@
 #include "TextureLibrary.h"
 
 struct Material {
-	Texture Albedo = CreateColorTexture(1, 1, 1);
-	Texture Roughness = CreateColorTexture(1, 1, 1);
-	Texture Metallic = CreateColorTexture(1, 1, 1);
+	Texture Albedo = CreateColorTextureRGB(1, 1, 1);
+	Texture Roughness = CreateColorTextureRGB(1, 1, 1);
+	Texture Metallic = CreateColorTextureRGB(1, 1, 1);
 
 	glm::vec3 EmissionColor{ 0.0f };
 	float EmissionStrength = 0.0f;

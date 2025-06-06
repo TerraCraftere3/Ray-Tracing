@@ -199,7 +199,7 @@ int main()
 		{
 			Material m;
 			m.isGlass = true;
-			m.Albedo = CreateColorTexture(1, 1, 1);
+			m.Albedo = CreateColorTextureRGB(1, 1, 1);
 			scene.Materials.push_back(m);
 		}
 	}

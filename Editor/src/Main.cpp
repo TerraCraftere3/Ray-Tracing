@@ -15,6 +15,130 @@
 #include <optional>
 #include <unordered_map>
 
+bool ShowMaterial(Material& mat)
+{
+	bool edited = false;
+
+	if (ImGui::TreeNodeEx(mat.name.c_str()))
+	{
+		char nameBuffer[128];
+		strncpy(nameBuffer, mat.name.c_str(), sizeof(nameBuffer));
+		nameBuffer[sizeof(nameBuffer) - 1] = '\0'; // Ensure null termination
+
+		if (ImGui::InputText("Name", nameBuffer, sizeof(nameBuffer))) {
+			mat.name = nameBuffer; // Update the original string
+		}
+
+		if (ImGui::ColorEdit3("Emission Color", glm::value_ptr(mat.EmissionColor))) edited = true;
+		if (ImGui::InputFloat("Emission Strength", &mat.EmissionStrength)) edited = true;
+
+		ImGui::TreePop();
+	}
+
+	return edited;
+}
+
+bool ShowSphere(Sphere& sphere, Material& mat, Scene* scene)
+{
+	bool edited = false;
+
+	if (ImGui::TreeNodeEx(sphere.name.c_str()))
+	{
+		char nameBuffer[128];
+		strncpy(nameBuffer, sphere.name.c_str(), sizeof(nameBuffer));
+		nameBuffer[sizeof(nameBuffer) - 1] = '\0'; // Ensure null termination
+
+		if (ImGui::InputText("Name", nameBuffer, sizeof(nameBuffer))) {
+			sphere.name = nameBuffer; // Update the original string
+		}
+
+		if (ImGui::DragFloat3("Position", glm::value_ptr(sphere.Position))) edited = true;
+		if (ImGui::DragFloat("Radius", &sphere.Radius)) edited = true;
+		if (ImGui::InputInt("Material Index", &sphere.MaterialIndex)) edited = true;
+		if (sphere.MaterialIndex < 0) sphere.MaterialIndex = 0;
+		if (sphere.MaterialIndex >= scene->Materials.size()) {
+			sphere.MaterialIndex = static_cast<int>(scene->Materials.size()) - 1;
+		}
+
+		ShowMaterial(mat);
+
+		ImGui::TreePop();
+	}
+
+	return edited;
+}
+
+bool ShowScene(Scene* scene, const Renderer* renderer)
+{
+	bool edited = false;
+
+	if (!scene)
+	{
+		ImGui::Text("No scene loaded.");
+		return false;
+	}
+
+	ImGui::Text("Scene Information:");
+	ImGui::Text("Spheres: %zu", scene->Spheres.size());
+	ImGui::Text("Materials: %zu", scene->Materials.size());
+
+	ImGuiTreeNodeFlags flag = ImGuiTreeNodeFlags_DefaultOpen;
+
+	if (ImGui::TreeNodeEx("Root", flag))
+	{
+		if (ImGui::TreeNodeEx("Spheres", flag))
+		{
+			for (int i = 0; i < scene->Spheres.size(); i++)
+			{
+				Sphere& sphere = scene->Spheres[i]; // Use reference to modify original
+				Material& mat = scene->Materials[sphere.MaterialIndex];
+				ImGui::PushID(i);
+
+				if (ShowSphere(sphere, mat, scene))
+					edited = true;
+
+				ImGui::PopID();
+			}
+
+			if (ImGui::Button("Add Sphere"))
+			{
+				scene->Spheres.push_back(Sphere());
+				scene->Spheres.back().MaterialIndex = 0; // Default to first material
+				edited = true;
+			}
+
+			ImGui::TreePop();
+		}
+
+		if (ImGui::TreeNodeEx("Materials", flag))
+		{
+			for (int i = 0; i < scene->Spheres.size(); i++)
+			{
+				Material& mat = scene->Materials[i]; // Use reference to modify original
+				ImGui::PushID(i);
+
+				if (ShowMaterial(mat))
+					edited = true;
+
+				ImGui::PopID();
+			}
+
+			if (ImGui::Button("Add Material"))
+			{
+				scene->Materials.push_back(Material());
+				edited = true;
+			}
+
+			ImGui::TreePop();
+		}
+
+		ImGui::TreePop();
+	}
+
+	return edited;
+}
+
+
 void ShowTextureLibrary()
 {
 	static std::optional<std::string> selectedTexturePath;
@@ -155,17 +279,20 @@ int main()
 	float deltaTime = 0.0f;
 	float frameTime = 0.0f;
 	float fps = 0.0f;
+	float renderSize = 1.0f;
 
 	{
 		{
 			Sphere s;
-			s.Position = { 0, 0, 0 };
+			s.name = "Small Blue";
+			s.Position = { -2, 0, 0 };
 			s.Radius = 1.0f;
 			s.MaterialIndex = 0;
 			scene.Spheres.push_back(s);
 		}
 		{
 			Sphere s;
+			s.name = "Light";
 			s.Position = { 2, 0, 0 };
 			s.Radius = 1.0f;
 			s.MaterialIndex = 2;
@@ -173,6 +300,7 @@ int main()
 		}
 		{
 			Sphere s;
+			s.name = "Floor";
 			s.Position = { 0, -101, 0 };
 			s.Radius = 100.0f;
 			s.MaterialIndex = 1;
@@ -180,24 +308,28 @@ int main()
 		}
 		{
 			Material m;
+			m.name = "Rock Wall";
 			m.Albedo = CreateTexture("textures/rock/rock-wall-mortar_albedo.png");
 			m.Roughness = CreateTexture("textures/rock/rock-wall-mortar_roughness.png");;
 			scene.Materials.push_back(m);
 		}
 		{
 			Material m;
+			m.name = "Rough Plaster";
 			m.Albedo = CreateTexture("textures/plaster/rough-plaster-basecolor.png");
 			m.Roughness = CreateTexture("textures/plaster/rough-plaster-roughness.png");;
 			scene.Materials.push_back(m);
 		}
 		{
 			Material m;
+			m.name = "Light";
 			m.EmissionColor = { 0.8f, 0.5f, 0.2f };
 			m.EmissionStrength = 2;
 			scene.Materials.push_back(m);
 		}
 		{
 			Material m;
+			m.name = "Glass";
 			m.isGlass = true;
 			m.Albedo = CreateColorTextureRGB(1, 1, 1);
 			scene.Materials.push_back(m);
@@ -217,58 +349,16 @@ int main()
 		ImGui::Text("Frame Time: %.2f ms", frameTime);
 		ImGui::Checkbox("Multi-threaded", &renderer.GetSettings().MultiThreaded);
 		ImGui::Checkbox("Accumulate", &renderer.GetSettings().Accumulate);
+		IMGUI_CONTROL_WITH_RESET(ImGui::DragFloat("Render Size", &renderSize, 0.01f, 0.1f, 2.0f, "%.2f"));
 		if (ImGui::Button("Reset")) {
 			renderer.ResetFrameIndex();
 		}
 		ImGui::End();
 
 		ImGui::Begin("Scene");
-		ImGui::Text("Spheres: %d", (int)scene.Spheres.size());
-		for (size_t i = 0; i < scene.Spheres.size(); i++) {
-			auto& sphere = scene.Spheres[i];
-			ImGui::PushID(i);
-			IMGUI_CONTROL_WITH_RESET(ImGui::DragFloat3("Position",glm::value_ptr(sphere.Position), 0.01f));
-			IMGUI_CONTROL_WITH_RESET(ImGui::DragFloat("Radius", &sphere.Radius, 0.01f, 0.01f, 10.0f));
-			IMGUI_CONTROL_WITH_RESET(ImGui::DragInt("Material", &sphere.MaterialIndex, 1.0f, 0, (int)scene.Materials.size() - 1));
-			if (ImGui::Button("Remove")) {
-				renderer.ResetFrameIndex();
-				scene.Spheres.erase(scene.Spheres.begin() + i);
-				i--; // Adjust index after removal
-			}
-			ImGui::PopID();
-			ImGui::Separator();
-		}
-		if (ImGui::Button("Add Sphere")) {
-			renderer.ResetFrameIndex();
-			scene.Spheres.push_back(Sphere());
-		}
+		IMGUI_CONTROL_WITH_RESET(ShowScene(&scene, &renderer));
 		ImGui::End();
 
-		ImGui::Begin("Materials");
-		ImGui::Text("Materials: %d", (int)scene.Materials.size());
-		for (size_t i = 0; i < scene.Materials.size(); i++) {
-			auto& material = scene.Materials[i];
-			ImGui::PushID(i);
-
-			DisplayImage(material.Albedo, "Albedo");
-			DisplayImage(material.Roughness, "Roughness");
-			DisplayImage(material.Metallic, "Metallic");
-
-			IMGUI_CONTROL_WITH_RESET(ImGui::ColorEdit3("Emission Color", glm::value_ptr(material.EmissionColor)));
-			IMGUI_CONTROL_WITH_RESET(ImGui::DragFloat("Emission Strength", &material.EmissionStrength, 0.01f, 0.0f, FLT_MAX));
-			if (ImGui::Button("Remove")) {
-				renderer.ResetFrameIndex();
-				scene.Materials.erase(scene.Materials.begin() + i);
-				i--; // Adjust index after removal
-			}
-			ImGui::PopID();
-			ImGui::Separator();
-		}
-		if (ImGui::Button("Add Material")) {
-			renderer.ResetFrameIndex();
-			scene.Materials.push_back(Material());
-		}
-		ImGui::End();
 
 		ImGui::Begin("Textures");
 		ShowTextureLibrary();
@@ -281,14 +371,16 @@ int main()
 		viewportHeight = ImGui::GetContentRegionAvail().y;
 		auto image = renderer.getFinalImage();
 		if (image)
-			ImGui::Image((ImTextureID)(intptr_t)image->GetTextureID(), ImVec2((float)image->GetWidth(), (float)image->GetHeight()));
+			ImGui::Image((ImTextureID)(intptr_t)image->GetTextureID(), ImVec2((float)viewportWidth, (float)viewportHeight));
 
 		ImGui::End();
 		ImGui::PopStyleVar();
 
 		auto startTime = Clock::now();
-		camera.OnResize(viewportWidth, viewportHeight);
-		renderer.OnResize(viewportWidth, viewportHeight);
+		int newWidth = (int)(viewportWidth * renderSize);
+		int newHeight = (int)(viewportHeight * renderSize);
+		camera.OnResize(newWidth, newHeight);
+		renderer.OnResize(newWidth, newHeight);
 		renderer.Render(camera, scene);
 		auto endTime = Clock::now();
 		deltaTime = std::chrono::duration<float>(endTime - lastTime).count();

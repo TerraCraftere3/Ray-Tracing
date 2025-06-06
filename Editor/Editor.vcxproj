@@ -94,7 +94,8 @@
       <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /E /I /Y "$(SolutionDir)Editor\runtime\*" "../bin/Windows-Debug-x86_64\"</Command>
+      <Command>IF NOT EXIST ..\bin\Windows-Debug-x86_64 (mkdir ..\bin\Windows-Debug-x86_64)
+xcopy /E /I /Y "$(SolutionDir)Editor\runtime\*" "../bin/Windows-Debug-x86_64\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -121,7 +122,8 @@
       <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /E /I /Y "$(SolutionDir)Editor\runtime\*" "../bin/Windows-Release-x86_64\"</Command>
+      <Command>IF NOT EXIST ..\bin\Windows-Release-x86_64 (mkdir ..\bin\Windows-Release-x86_64)
+xcopy /E /I /Y "$(SolutionDir)Editor\runtime\*" "../bin/Windows-Release-x86_64\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
@@ -148,7 +150,8 @@
       <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /E /I /Y "$(SolutionDir)Editor\runtime\*" "../bin/Windows-Dist-x86_64\"</Command>
+      <Command>IF NOT EXIST ..\bin\Windows-Dist-x86_64 (mkdir ..\bin\Windows-Dist-x86_64)
+xcopy /E /I /Y "$(SolutionDir)Editor\runtime\*" "../bin/Windows-Dist-x86_64\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

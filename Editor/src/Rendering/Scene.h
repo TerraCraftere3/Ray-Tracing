@@ -3,8 +3,11 @@
 #include <glm/glm.hpp>
 #include <vector>
 #include "TextureLibrary.h"
+#include "string"
 
 struct Material {
+	std::string name = "Material";
+
 	Texture Albedo = CreateColorTextureRGB(1, 1, 1);
 	Texture Roughness = CreateColorTextureRGB(1, 1, 1);
 	Texture Metallic = CreateColorTextureRGB(1, 1, 1);
@@ -19,6 +22,8 @@ struct Material {
 };
 
 struct Sphere {
+	std::string name = "Sphere";
+
 	glm::vec3 Position{ 0, 0, 0 };
 	float Radius = 0.5f;
 

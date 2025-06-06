@@ -28,7 +28,7 @@ ifeq ($(origin AR), default)
   AR = ar
 endif
 RESCOMP = windres
-INCLUDES += -Isrc -Isrc/vendor -Isrc/vendor/spdlog/include -Isrc/vendor/glad/include -Isrc/vendor/glfw/include
+INCLUDES += -Isrc -Isrc/vendor -Isrc/vendor/spdlog/include -Isrc/vendor/glad/include -Isrc/vendor/glfw/include -Isrc/vendor/tinyobjloader
 FORCE_INCLUDE +=
 ALL_CPPFLAGS += $(CPPFLAGS) -MD -MP $(DEFINES) $(INCLUDES)
 ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
@@ -133,6 +133,7 @@ GENERATED += $(OBJDIR)/posix_thread.o
 GENERATED += $(OBJDIR)/posix_time.o
 GENERATED += $(OBJDIR)/spdlog.o
 GENERATED += $(OBJDIR)/stdout_sinks.o
+GENERATED += $(OBJDIR)/tiny_obj_loader.o
 GENERATED += $(OBJDIR)/vulkan.o
 GENERATED += $(OBJDIR)/window1.o
 GENERATED += $(OBJDIR)/x11_init.o
@@ -178,6 +179,7 @@ OBJECTS += $(OBJDIR)/posix_thread.o
 OBJECTS += $(OBJDIR)/posix_time.o
 OBJECTS += $(OBJDIR)/spdlog.o
 OBJECTS += $(OBJDIR)/stdout_sinks.o
+OBJECTS += $(OBJDIR)/tiny_obj_loader.o
 OBJECTS += $(OBJDIR)/vulkan.o
 OBJECTS += $(OBJDIR)/window1.o
 OBJECTS += $(OBJDIR)/x11_init.o
@@ -311,6 +313,9 @@ $(OBJDIR)/spdlog.o: src/Vendor/spdlog/src/spdlog.cpp
 	@echo "$(notdir $<)"
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/stdout_sinks.o: src/Vendor/spdlog/src/stdout_sinks.cpp
+	@echo "$(notdir $<)"
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/tiny_obj_loader.o: src/Vendor/tinyobjloader/tiny_obj_loader.cc
 	@echo "$(notdir $<)"
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/context.o: src/vendor/glfw/src/context.c

@@ -14,6 +14,7 @@
 #include <set>
 #include <optional>
 #include <unordered_map>
+#include <Platform/Models.h>
 
 bool ShowMaterial(Material& mat)
 {
@@ -105,6 +106,37 @@ bool ShowSphere(Sphere& sphere, Material& mat, Scene* scene)
 	return edited;
 }
 
+bool ShowMesh(Mesh& mesh, Material& mat, Scene* scene)
+{
+	bool edited = false;
+
+	if (ImGui::TreeNodeEx(mesh.name.c_str()))
+	{
+		char nameBuffer[128];
+		strncpy(nameBuffer, mesh.name.c_str(), sizeof(nameBuffer));
+		nameBuffer[sizeof(nameBuffer) - 1] = '\0'; // Ensure null termination
+
+		if (ImGui::InputText("Name", nameBuffer, sizeof(nameBuffer))) {
+			mesh.name = nameBuffer; // Update the original string
+		}
+
+		if (ImGui::DragFloat3("Position", glm::value_ptr(mesh.Position))) edited = true;
+		if (ImGui::DragFloat3("Scale", glm::value_ptr(mesh.Scale))) edited = true;
+		if (ImGui::DragFloat3("Rotation", glm::value_ptr(mesh.Rotation))) edited = true;
+		if (ImGui::InputInt("Material Index", &mesh.MaterialIndex)) edited = true;
+		if (mesh.MaterialIndex < 0) mesh.MaterialIndex = 0;
+		if (mesh.MaterialIndex >= scene->Materials.size()) {
+			mesh.MaterialIndex = static_cast<int>(scene->Materials.size()) - 1;
+		}
+
+		ShowMaterial(mat);
+
+		ImGui::TreePop();
+	}
+
+	return edited;
+}
+
 bool ShowScene(Scene* scene, const Renderer* renderer)
 {
 	bool edited = false;
@@ -142,6 +174,23 @@ bool ShowScene(Scene* scene, const Renderer* renderer)
 				scene->Spheres.push_back(Sphere());
 				scene->Spheres.back().MaterialIndex = 0; // Default to first material
 				edited = true;
+			}
+
+			ImGui::TreePop();
+		}
+
+		if (ImGui::TreeNodeEx("Spheres", flag))
+		{
+			for (int i = 0; i < scene->Meshes.size(); i++)
+			{
+				Mesh& mesh = scene->Meshes[i]; // Use reference to modify original
+				Material& mat = scene->Materials[mesh.MaterialIndex];
+				ImGui::PushID(i);
+
+				if (ShowMesh(mesh, mat, scene))
+					edited = true;
+
+				ImGui::PopID();
 			}
 
 			ImGui::TreePop();
@@ -320,6 +369,17 @@ int main()
 			s.Radius = 100.0f;
 			s.MaterialIndex = 1;
 			scene.Spheres.push_back(s);
+		}
+		{
+			Mesh suzanneMesh;
+			if (LoadOBJMesh("models/suzanne.obj", suzanneMesh)) {
+				suzanneMesh.name = "Suzanne";
+				suzanneMesh.MaterialIndex = 3;
+				scene.Meshes.push_back(suzanneMesh);
+			}
+			else {
+				LOG_ERROR("Failed to load Suzanne mesh.");
+			}
 		}
 		{
 			Material m;

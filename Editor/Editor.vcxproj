@@ -81,7 +81,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GLM_ENABLE_EXPERIMENTAL;SPDLOG_COMPILED_LIB;FMT_UNICODE=0;PLATFORM_WINDOWS;_GLFW_WIN32;CONFIGURATION_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;src\vendor;src\vendor\spdlog\include;src\vendor\glad\include;src\vendor\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;src\vendor;src\vendor\spdlog\include;src\vendor\glad\include;src\vendor\glfw\include;src\vendor\tinyobjloader;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
@@ -103,7 +103,7 @@ xcopy /E /I /Y "$(SolutionDir)Editor\runtime\*" "../bin/Windows-Debug-x86_64\"</
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GLM_ENABLE_EXPERIMENTAL;SPDLOG_COMPILED_LIB;FMT_UNICODE=0;PLATFORM_WINDOWS;_GLFW_WIN32;CONFIGURATION_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;src\vendor;src\vendor\spdlog\include;src\vendor\glad\include;src\vendor\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;src\vendor;src\vendor\spdlog\include;src\vendor\glad\include;src\vendor\glfw\include;src\vendor\tinyobjloader;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -131,7 +131,7 @@ xcopy /E /I /Y "$(SolutionDir)Editor\runtime\*" "../bin/Windows-Release-x86_64\"
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GLM_ENABLE_EXPERIMENTAL;SPDLOG_COMPILED_LIB;FMT_UNICODE=0;PLATFORM_WINDOWS;_GLFW_WIN32;CONFIGURATION_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;src\vendor;src\vendor\spdlog\include;src\vendor\glad\include;src\vendor\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;src\vendor;src\vendor\spdlog\include;src\vendor\glad\include;src\vendor\glfw\include;src\vendor\tinyobjloader;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>None</DebugInformationFormat>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -157,10 +157,12 @@ xcopy /E /I /Y "$(SolutionDir)Editor\runtime\*" "../bin/Windows-Dist-x86_64\"</C
   <ItemGroup>
     <ClInclude Include="src\Core\Core.h" />
     <ClInclude Include="src\Core\Log.h" />
+    <ClInclude Include="src\Platform\Common\Models.h" />
     <ClInclude Include="src\Platform\Common\stb_image.h" />
     <ClInclude Include="src\Platform\ImGui.h" />
     <ClInclude Include="src\Platform\Image.h" />
     <ClInclude Include="src\Platform\Input.h" />
+    <ClInclude Include="src\Platform\Models.h" />
     <ClInclude Include="src\Platform\Platform.h" />
     <ClInclude Include="src\Platform\Window.h" />
     <ClInclude Include="src\Platform\Windows\ImGuiManager.h" />
@@ -299,6 +301,7 @@ xcopy /E /I /Y "$(SolutionDir)Editor\runtime\*" "../bin/Windows-Dist-x86_64\"</C
     <ClInclude Include="src\Vendor\spdlog\include\spdlog\stopwatch.h" />
     <ClInclude Include="src\Vendor\spdlog\include\spdlog\tweakme.h" />
     <ClInclude Include="src\Vendor\spdlog\include\spdlog\version.h" />
+    <ClInclude Include="src\Vendor\tinyobjloader\tiny_obj_loader.h" />
     <ClInclude Include="src\vendor\glfw\src\null_joystick.h" />
     <ClInclude Include="src\vendor\glfw\src\null_platform.h" />
   </ItemGroup>
@@ -325,6 +328,7 @@ xcopy /E /I /Y "$(SolutionDir)Editor\runtime\*" "../bin/Windows-Dist-x86_64\"</C
     <ClCompile Include="src\Vendor\spdlog\src\file_sinks.cpp" />
     <ClCompile Include="src\Vendor\spdlog\src\spdlog.cpp" />
     <ClCompile Include="src\Vendor\spdlog\src\stdout_sinks.cpp" />
+    <ClCompile Include="src\Vendor\tinyobjloader\tiny_obj_loader.cc" />
     <ClCompile Include="src\vendor\glfw\src\context.c" />
     <ClCompile Include="src\vendor\glfw\src\egl_context.c" />
     <ClCompile Include="src\vendor\glfw\src\init.c" />

@@ -22,6 +22,21 @@ struct Material {
 	}
 };
 
+struct Mesh {
+	std::string name = "Mesh";
+
+	std::vector<glm::vec3> Vertices;
+	std::vector<glm::vec3> Normals;
+	std::vector<glm::vec2> UVs;
+	std::vector<uint32_t> Indices;
+
+	glm::vec3 Position{ 0, 0, 0 };
+	glm::vec3 Rotation{ 0, 0, 0 };
+	glm::vec3 Scale{ 1, 1, 1 };
+
+	int MaterialIndex = 0;
+};
+
 struct Sphere {
 	std::string name = "Sphere";
 
@@ -33,5 +48,6 @@ struct Sphere {
 
 struct Scene {
 	std::vector<Sphere> Spheres;
+	std::vector<Mesh> Meshes;
 	std::vector<Material> Materials;
 };

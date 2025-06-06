@@ -28,21 +28,26 @@ public:
 
 	void ResetFrameIndex() { m_FrameIndex = 1; }
 private:
-	struct HitPayload
-	{
+	struct HitPayload {
 		float HitDistance;
+		int ObjectIndex = -1;
 		glm::vec3 WorldPosition;
 		glm::vec3 WorldNormal;
 		glm::vec2 UV;
 
-		uint32_t ObjectIndex;
+		int MeshIndex = -1;
+		int TriangleIndex = -1;
+		float BaryU = 0.0f, BaryV = 0.0f;
 	};
+
 
 	glm::vec4 PerPixel(uint32_t x, uint32_t y);
 
 	HitPayload TraceRay(const Ray& ray);
 	HitPayload ClosestHit(const Ray& ray, float HitDistance, int ObjectIndex);
+	HitPayload ClosestHit(const Ray& ray, float t, int meshIndex, int triIndex, float u, float v);
 	HitPayload Miss(const Ray& ray);
+	bool IntersectTriangle(const Ray& ray, const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2, float& t, float& u, float& v);
 private:
 	std::shared_ptr<Image> m_FinalImage;
 

@@ -114,19 +114,28 @@ void Renderer::OnResize(uint32_t width, uint32_t height)
 		m_ImageVerticalIter[i] = i;
 }
 
+struct Triangle {
+	uint32_t MeshIndex = UINT32_MAX;
+	uint32_t VertexIndex0;
+	uint32_t VertexIndex1;
+	uint32_t VertexIndex2;
+	float U, V; // Barycentric coordinates
+	Triangle(uint32_t meshIndex, uint32_t v0, uint32_t v1, uint32_t v2, float u, float v)
+		: MeshIndex(meshIndex), VertexIndex0(v0), VertexIndex1(v1), VertexIndex2(v2), U(u), V(v) {
+	}
+	Triangle() = default;
+};
+
 HitPayload Renderer::TraceRay(const Ray& ray)
 {
-	// rayOrigin = origin of the ray
-	// rayDirection = direction of the ray
-	// r = radius
-	// t = hit distance
-
 	int closestSphereIndex = -1;
 	float hitDistance = FLT_MAX;
+	HitPayload closestPayload = Miss(ray);
+
+	// Sphere intersection
 	for (size_t i = 0; i < m_ActiveScene->Spheres.size(); i++) {
 		const Sphere& sphere = m_ActiveScene->Spheres[i];
-		float radius = sphere.Radius;
-		vec3 origin = ray.Origin - sphere.Position;
+		glm::vec3 origin = ray.Origin - sphere.Position;
 
 		float a = dot(ray.Direction, ray.Direction);
 		float b = 2.0f * dot(origin, ray.Direction);
@@ -136,20 +145,53 @@ HitPayload Renderer::TraceRay(const Ray& ray)
 		if (discriminant < 0)
 			continue;
 
-		float cloestT = (-b - sqrt(discriminant)) / (2.0f * a);
-		if (cloestT > 0.0f && cloestT < hitDistance) {
+		float t = (-b - sqrt(discriminant)) / (2.0f * a);
+		if (t > 0.0f && t < hitDistance) {
+			hitDistance = t;
 			closestSphereIndex = (int)i;
-			hitDistance = cloestT;
 		}
 	}
 
-	if (closestSphereIndex < 0)
-		return Miss(ray);
+	if (closestSphereIndex >= 0) {
+		return ClosestHit(ray, hitDistance, closestSphereIndex);
+	}
 
-	return ClosestHit(ray, hitDistance, closestSphereIndex);
+	// Triangle intersection
+	for (size_t meshIndex = 0; meshIndex < m_ActiveScene->Meshes.size(); meshIndex++) {
+		const Mesh& mesh = m_ActiveScene->Meshes[meshIndex];
 
+		for (size_t i = 0; i < mesh.Indices.size(); i += 3) {
+			uint32_t i0 = mesh.Indices[i];
+			uint32_t i1 = mesh.Indices[i + 1];
+			uint32_t i2 = mesh.Indices[i + 2];
 
+			const glm::vec3& v0 = mesh.Vertices[i0];
+			const glm::vec3& v1 = mesh.Vertices[i1];
+			const glm::vec3& v2 = mesh.Vertices[i2];
+
+			float t, u, v;
+			if (IntersectTriangle(ray, v0, v1, v2, t, u, v)) {
+				if (t < hitDistance) {
+					hitDistance = t;
+
+					HitPayload payload;
+					payload.HitDistance = t;
+					payload.MeshIndex = (int)meshIndex;
+					payload.TriangleIndex = (int)i;
+					payload.BaryU = u;
+					payload.BaryV = v;
+					closestPayload = payload;
+				}
+			}
+		}
+	}
+
+	if (closestPayload.MeshIndex >= 0)
+		return ClosestHit(ray, closestPayload.HitDistance, closestPayload.MeshIndex, closestPayload.TriangleIndex, closestPayload.BaryU, closestPayload.BaryV);
+
+	return Miss(ray);
 }
+
 
 glm::vec4 Renderer::PerPixel(uint32_t x, uint32_t y)
 {
@@ -186,8 +228,9 @@ glm::vec4 Renderer::PerPixel(uint32_t x, uint32_t y)
 			break;
 		}
 
-		const Sphere& sphere = m_ActiveScene->Spheres[payload.ObjectIndex];
-		const Material& mat = m_ActiveScene->Materials[sphere.MaterialIndex];
+		const Material& mat = (payload.MeshIndex >= 0)
+			? m_ActiveScene->Materials[m_ActiveScene->Meshes[payload.MeshIndex].MaterialIndex]
+			: m_ActiveScene->Materials[m_ActiveScene->Spheres[payload.ObjectIndex].MaterialIndex];
 
 		light += mat.GetEmission();
 		if (length(mat.GetEmission()) > 0.0f)
@@ -200,6 +243,42 @@ glm::vec4 Renderer::PerPixel(uint32_t x, uint32_t y)
 	}
 
 	return vec4(light, 1);
+}
+
+HitPayload Renderer::ClosestHit(const Ray& ray, float t, int meshIndex, int triIndex, float u, float v)
+{
+	const Mesh& mesh = m_ActiveScene->Meshes[meshIndex];
+	int i0 = mesh.Indices[triIndex];
+	int i1 = mesh.Indices[triIndex + 1];
+	int i2 = mesh.Indices[triIndex + 2];
+
+	glm::vec3 v0 = mesh.Vertices[i0];
+	glm::vec3 v1 = mesh.Vertices[i1];
+	glm::vec3 v2 = mesh.Vertices[i2];
+
+	glm::vec2 uv0 = mesh.UVs[i0];
+	glm::vec2 uv1 = mesh.UVs[i1];
+	glm::vec2 uv2 = mesh.UVs[i2];
+
+	glm::vec3 n0 = mesh.Normals[i0];
+	glm::vec3 n1 = mesh.Normals[i1];
+	glm::vec3 n2 = mesh.Normals[i2];
+
+	float w = 1.0f - u - v;
+	glm::vec3 normal = normalize(w * n0 + u * n1 + v * n2);
+	glm::vec2 uv = w * uv0 + u * uv1 + v * uv2;
+
+	glm::vec3 hitPoint = ray.Origin + ray.Direction * t;
+
+	HitPayload payload;
+	payload.HitDistance = t;
+	payload.MeshIndex = meshIndex;
+	payload.TriangleIndex = triIndex;
+	payload.WorldPosition = hitPoint;
+	payload.WorldNormal = normal;
+	payload.UV = uv;
+
+	return payload;
 }
 
 
@@ -243,4 +322,28 @@ HitPayload Renderer::Miss(const Ray& ray)
 	HitPayload payload;
 	payload.HitDistance = -1.0f; // Indicating no hit
 	return payload;
+}
+
+bool Renderer::IntersectTriangle(const Ray& ray, const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2, float& t, float& u, float& v) {
+	const float EPSILON = 0.0000001f;
+	glm::vec3 edge1 = v1 - v0;
+	glm::vec3 edge2 = v2 - v0;
+	glm::vec3 h = cross(ray.Direction, edge2);
+	float a = dot(edge1, h);
+	if (abs(a) < EPSILON)
+		return false;
+
+	float f = 1.0f / a;
+	glm::vec3 s = ray.Origin - v0;
+	u = f * dot(s, h);
+	if (u < 0.0f || u > 1.0f)
+		return false;
+
+	glm::vec3 q = cross(s, edge1);
+	v = f * dot(ray.Direction, q);
+	if (v < 0.0f || u + v > 1.0f)
+		return false;
+
+	t = f * dot(edge2, q);
+	return t > EPSILON;
 }

@@ -45,6 +45,7 @@ project "Editor"
         "Editor/src/Vendor/glad/**.h",   "Editor/src/Vendor/glad/**.cpp",   "Editor/src/Vendor/glad/**.c",
         "Editor/src/Vendor/glm/**.h",    "Editor/src/Vendor/glm/**.cpp",    "Editor/src/Vendor/glm/**.c",
         "Editor/src/Vendor/spdlog/**.h", "Editor/src/Vendor/spdlog/**.cpp", "Editor/src/Vendor/spdlog/**.c",
+        "Editor/src/Vendor/tinyobjloader/*",
 
         -- GLFW --
         "Editor/src/vendor/glfw/src/context.c",
@@ -60,7 +61,8 @@ project "Editor"
         "Editor/src/vendor",
         "Editor/src/vendor/spdlog/include",
         "Editor/src/vendor/glad/include",
-        "Editor/src/vendor/glfw/include"
+        "Editor/src/vendor/glfw/include",
+        "Editor/src/vendor/tinyobjloader"
     }
 
     defines { "GLM_ENABLE_EXPERIMENTAL", "SPDLOG_COMPILED_LIB"}

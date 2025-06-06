@@ -70,6 +70,9 @@
     <Filter Include="Vendor\spdlog\src">
       <UniqueIdentifier>{02889032-6E9E-8EC8-B715-1AEA236B5F50}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Vendor\tinyobjloader">
+      <UniqueIdentifier>{18A0DDA5-042F-676F-AD4D-7B6A99BB7715}</UniqueIdentifier>
+    </Filter>
     <Filter Include="vendor">
       <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
     </Filter>
@@ -86,6 +89,9 @@
     </ClInclude>
     <ClInclude Include="src\Core\Log.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Common\Models.h">
+      <Filter>Platform\Common</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Common\stb_image.h">
       <Filter>Platform\Common</Filter>
@@ -513,6 +519,9 @@
     <ClInclude Include="src\Vendor\spdlog\include\spdlog\version.h">
       <Filter>Vendor\spdlog\include\spdlog</Filter>
     </ClInclude>
+    <ClInclude Include="src\Vendor\tinyobjloader\tiny_obj_loader.h">
+      <Filter>Vendor\tinyobjloader</Filter>
+    </ClInclude>
     <ClInclude Include="src\vendor\glfw\src\null_joystick.h">
       <Filter>vendor\glfw\src</Filter>
     </ClInclude>
@@ -584,6 +593,9 @@
     </ClCompile>
     <ClCompile Include="src\Vendor\spdlog\src\stdout_sinks.cpp">
       <Filter>Vendor\spdlog\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vendor\tinyobjloader\tiny_obj_loader.cc">
+      <Filter>Vendor\tinyobjloader</Filter>
     </ClCompile>
     <ClCompile Include="src\vendor\glfw\src\context.c">
       <Filter>vendor\glfw\src</Filter>

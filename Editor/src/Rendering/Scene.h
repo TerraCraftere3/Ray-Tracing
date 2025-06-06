@@ -11,6 +11,7 @@ struct Material {
 	Texture Albedo = CreateColorTextureRGB(1, 1, 1);
 	Texture Roughness = CreateColorTextureRGB(1, 1, 1);
 	Texture Metallic = CreateColorTextureRGB(1, 1, 1);
+	Texture Normal = CreateColorTextureRGB(0.5f, 0.5f, 1.0f);
 
 	glm::vec3 EmissionColor{ 0.0f };
 	float EmissionStrength = 0.0f;

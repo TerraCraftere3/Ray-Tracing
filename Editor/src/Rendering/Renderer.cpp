@@ -213,15 +213,27 @@ HitPayload Renderer::ClosestHit(const Ray& ray, float HitDistance, int ObjectInd
 
 	vec3 origin = ray.Origin - closestSphere.Position;
 	vec3 localPosition = origin + HitDistance * ray.Direction;
-	payload.WorldPosition = origin + HitDistance * ray.Direction;
-	payload.WorldNormal = normalize(payload.WorldPosition);
-
-	payload.WorldPosition += closestSphere.Position; // Convert to world space
 
 	vec3 p = normalize(localPosition);
 	float u = 0.5f + atan2(p.z, p.x) / (2.0f * glm::pi<float>());
 	float v = 0.5f - asin(p.y) / glm::pi<float>();
 	payload.UV = vec2(u, v);
+
+	vec3 normalMap = m_ActiveScene->Materials[closestSphere.MaterialIndex].Normal.Sample(payload.UV);
+	vec3 tangentNormal = normalize(normalMap * 2.0f - 1.0f);
+
+	payload.WorldPosition = origin + HitDistance * ray.Direction;
+	auto worldNormal = normalize(payload.WorldPosition);
+
+	vec3 up = glm::abs(worldNormal.y) < 0.999f ? vec3(0, 1, 0) : vec3(1, 0, 0);
+	vec3 tangent = normalize(cross(up, worldNormal));
+	vec3 bitangent = cross(worldNormal, tangent);
+
+	mat3 TBN = mat3(tangent, bitangent, worldNormal);
+	vec3 perturbedNormal = normalize(TBN * tangentNormal);
+
+	payload.WorldNormal = perturbedNormal;
+	payload.WorldPosition += closestSphere.Position; // Convert to world space
 
 	return payload;
 }

@@ -310,14 +310,16 @@ int main()
 			Material m;
 			m.name = "Rock Wall";
 			m.Albedo = CreateTexture("textures/rock/rock-wall-mortar_albedo.png");
-			m.Roughness = CreateTexture("textures/rock/rock-wall-mortar_roughness.png");;
+			m.Roughness = CreateTexture("textures/rock/rock-wall-mortar_roughness.png");
+			m.Normal = CreateTexture("textures/rock/rock-wall-mortar_normal-ogl.png");
 			scene.Materials.push_back(m);
 		}
 		{
 			Material m;
 			m.name = "Rough Plaster";
 			m.Albedo = CreateTexture("textures/plaster/rough-plaster-basecolor.png");
-			m.Roughness = CreateTexture("textures/plaster/rough-plaster-roughness.png");;
+			m.Roughness = CreateTexture("textures/plaster/rough-plaster-roughness.png");
+			m.Normal = CreateTexture("textures/plaster/rough-plaster-normal-ogl.png");	
 			scene.Materials.push_back(m);
 		}
 		{

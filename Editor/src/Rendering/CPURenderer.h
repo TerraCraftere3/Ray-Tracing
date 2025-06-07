@@ -18,7 +18,10 @@ public:
 
     unsigned int GetFinalImageID() const override;
     bool isValidImage() const override;
-    bool isGPU() const override { return false; };
+    bool isGPU() const override { return false; }; 
+    
+    ImVec2 GetViewportBottomLeft() const override { return ImVec2(0, 0); };
+    ImVec2 GetViewportTopRight() const override { return ImVec2(1, 1); };
 
 private:
     struct HitPayload

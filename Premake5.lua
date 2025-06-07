@@ -70,7 +70,7 @@ project "Editor"
     local platformName = getPlatformName()
 
     targetdir ("bin/".. platformName .."-%{cfg.buildcfg}-%{cfg.architecture}")
-    debugdir ("bin/".. platformName .."-%{cfg.buildcfg}-%{cfg.architecture}")
+    -- debugdir ("bin/".. platformName .."-%{cfg.buildcfg}-%{cfg.architecture}") -- Sets the working directory
     objdir ("bin-int/".. platformName .."-%{cfg.buildcfg}-%{cfg.architecture}")
 
     filter "action:vs*"
@@ -89,10 +89,6 @@ project "Editor"
             "Editor/src/Platform/Windows/**.h", "Editor/src/Platform/Windows/**.cpp", "Editor/src/Platform/Windows/**.c",
         }
         links { "opengl32" }
-        postbuildcommands {
-            ("{MKDIR} %{cfg.targetdir}"),
-            ("xcopy /E /I /Y \"%{wks.location}Editor\\runtime\\*\" \"%{cfg.targetdir}\\\"")
-        }
 
     filter "system:linux"
         defines { "PLATFORM_LINUX" }
@@ -109,10 +105,6 @@ project "Editor"
             "Editor/src/Platform/Linux/**.h", "Editor/src/Platform/Linux/**.cpp", "Editor/src/Platform/Linux/**.c",
         }
         links { "GL", "X11", "pthread", "dl" }
-        postbuildcommands {
-            ("{MKDIR} %{cfg.targetdir}"),
-            ("ls -la \"%{cfg.targetdir}/\"")
-        }
 
     filter "configurations:Debug"
         defines { "CONFIGURATION_DEBUG" }

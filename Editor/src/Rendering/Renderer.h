@@ -5,6 +5,8 @@
 #include "Camera.h"
 #include "Scene.h"
 
+#include "Platform/ImGui.h"
+
 class Renderer
 {
 public:
@@ -25,6 +27,9 @@ public:
     virtual Settings& GetSettings() { return m_Settings; }
     virtual void ResetFrameIndex() { m_FrameIndex = 1; }
     virtual bool isGPU() const = 0;
+
+    virtual ImVec2 GetViewportBottomLeft() const = 0;
+    virtual ImVec2 GetViewportTopRight() const = 0;
 
 protected:
     Settings m_Settings;

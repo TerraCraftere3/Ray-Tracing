@@ -443,7 +443,8 @@ int main()
 		ImGui::Text("Frame Time: %.2f ms", frameTime);
 		ImGui::Checkbox("Multi-threaded", &renderer->GetSettings().MultiThreaded);
 		ImGui::Checkbox("Accumulate", &renderer->GetSettings().Accumulate);
-		IMGUI_CONTROL_WITH_RESET_WITH_CALLBACK(ImGui::DragFloat("Render Size", &renderSize, 0.01f, 0.1f, 2.0f, "%.2f"), renderSize = glm::clamp(renderSize, 0.1f, 2.0f));
+		if(!renderer->isGPU())
+			IMGUI_CONTROL_WITH_RESET_WITH_CALLBACK(ImGui::DragFloat("Render Size", &renderSize, 0.01f, 0.1f, 2.0f, "%.2f"), renderSize = glm::clamp(renderSize, 0.1f, 2.0f));
 		if (ImGui::Combo("Renderer", &currentRendererIndex, rendererOptions, IM_ARRAYSIZE(rendererOptions))) {
 			if (currentRendererIndex == 0)
 				renderer = &cpuRenderer;
@@ -470,17 +471,22 @@ int main()
 		viewportWidth = ImGui::GetContentRegionAvail().x;
 		viewportHeight = ImGui::GetContentRegionAvail().y;
 		if(renderer->isValidImage())
-			ImGui::Image((ImTextureID)(intptr_t)renderer->GetFinalImageID(), ImVec2((float)viewportWidth, (float)viewportHeight));
+			ImGui::Image((ImTextureID)(intptr_t)renderer->GetFinalImageID(), ImVec2((float)viewportWidth, (float)viewportHeight), renderer->GetViewportBottomLeft(), renderer->GetViewportTopRight());
 
 		ImGui::End();
 		ImGui::PopStyleVar();
 
 		auto startTime = Clock::now();
-		int newWidth = (int)(viewportWidth * renderSize);
-		int newHeight = (int)(viewportHeight * renderSize);
+		int newWidth = (int)(viewportWidth);
+		int newHeight = (int)(viewportHeight);
+		if(!renderer->isGPU()){
+			int newWidth = (int)(viewportWidth * renderSize);
+			int newHeight = (int)(viewportHeight * renderSize);
+		}
 		camera.OnResize(newWidth, newHeight);
 		renderer->OnResize(newWidth, newHeight);
 		renderer->Render(camera, scene);
+
 		auto endTime = Clock::now();
 		deltaTime = std::chrono::duration<float>(endTime - lastTime).count();
 		frameTime = std::chrono::duration<float, std::milli>(endTime - startTime).count();

@@ -93,10 +93,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <PostBuildEvent>
-      <Command>IF NOT EXIST ..\bin\Windows-Debug-x86_64 (mkdir ..\bin\Windows-Debug-x86_64)
-xcopy /E /I /Y "$(SolutionDir)Editor\runtime\*" "../bin/Windows-Debug-x86_64\"</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -121,10 +117,6 @@ xcopy /E /I /Y "$(SolutionDir)Editor\runtime\*" "../bin/Windows-Debug-x86_64\"</
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <PostBuildEvent>
-      <Command>IF NOT EXIST ..\bin\Windows-Release-x86_64 (mkdir ..\bin\Windows-Release-x86_64)
-xcopy /E /I /Y "$(SolutionDir)Editor\runtime\*" "../bin/Windows-Release-x86_64\"</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
     <ClCompile>
@@ -149,10 +141,6 @@ xcopy /E /I /Y "$(SolutionDir)Editor\runtime\*" "../bin/Windows-Release-x86_64\"
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <PostBuildEvent>
-      <Command>IF NOT EXIST ..\bin\Windows-Dist-x86_64 (mkdir ..\bin\Windows-Dist-x86_64)
-xcopy /E /I /Y "$(SolutionDir)Editor\runtime\*" "../bin/Windows-Dist-x86_64\"</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Core\Core.h" />
@@ -162,7 +150,6 @@ xcopy /E /I /Y "$(SolutionDir)Editor\runtime\*" "../bin/Windows-Dist-x86_64\"</C
     <ClInclude Include="src\Platform\ImGui.h" />
     <ClInclude Include="src\Platform\Image.h" />
     <ClInclude Include="src\Platform\Input.h" />
-    <ClInclude Include="src\Platform\Models.h" />
     <ClInclude Include="src\Platform\Platform.h" />
     <ClInclude Include="src\Platform\Window.h" />
     <ClInclude Include="src\Platform\Windows\ImGuiManager.h" />
@@ -179,10 +166,10 @@ xcopy /E /I /Y "$(SolutionDir)Editor\runtime\*" "../bin/Windows-Dist-x86_64\"</C
     <ClInclude Include="src\Platform\Windows\imstb_textedit.h" />
     <ClInclude Include="src\Platform\Windows\imstb_truetype.h" />
     <ClInclude Include="src\Platform\stb_image.h" />
+    <ClInclude Include="src\Rendering\CPURenderer.h" />
     <ClInclude Include="src\Rendering\Camera.h" />
     <ClInclude Include="src\Rendering\GPURenderer.h" />
     <ClInclude Include="src\Rendering\Ray.h" />
-    <ClInclude Include="src\Rendering\CPURenderer.h" />
     <ClInclude Include="src\Rendering\Renderer.h" />
     <ClInclude Include="src\Rendering\Scene.h" />
     <ClInclude Include="src\Rendering\Texture.h" />
@@ -319,8 +306,8 @@ xcopy /E /I /Y "$(SolutionDir)Editor\runtime\*" "../bin/Windows-Dist-x86_64\"</C
     <ClCompile Include="src\Platform\Windows\imgui_impl_opengl3.cpp" />
     <ClCompile Include="src\Platform\Windows\imgui_tables.cpp" />
     <ClCompile Include="src\Platform\Windows\imgui_widgets.cpp" />
-    <ClCompile Include="src\Rendering\Camera.cpp" />
     <ClCompile Include="src\Rendering\CPURenderer.cpp" />
+    <ClCompile Include="src\Rendering\Camera.cpp" />
     <ClCompile Include="src\Rendering\GPURenderer.cpp" />
     <ClCompile Include="src\Vendor\glad\src\glad.c" />
     <ClCompile Include="src\Vendor\glm\detail\glm.cpp" />

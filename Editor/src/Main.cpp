@@ -15,6 +15,8 @@
 #include <optional>
 #include <unordered_map>
 #include <Platform/Models.h>
+#include <Rendering/CPURenderer.h>
+#include <Rendering/GPURenderer.h>
 
 bool ShowMaterial(Material& mat)
 {
@@ -331,9 +333,16 @@ int main()
 	Input::Init(window);
 	LOG_INFO("Application started");
 
-	Renderer renderer;
+	CPURenderer cpuRenderer;
+	GPURenderer gpuRenderer; 
+	Renderer* renderer = &gpuRenderer; 
+
+	static int currentRendererIndex = 1; // 0 = CPU, 1 = GPU
+	const char* rendererOptions[] = { "CPU Renderer", "GPU Renderer" };
+
 	Scene scene;
 	Camera camera(45.0f, 0.1f, 100.0f);
+	
 
 	float viewportWidth = 0.0f;
 	float viewportHeight = 0.0f;
@@ -419,10 +428,10 @@ int main()
 	}
 
 #define IMGUI_CONTROL_WITH_RESET(Func) \
-	if (Func) renderer.ResetFrameIndex()
+	if (Func) renderer->ResetFrameIndex()
 
 #define IMGUI_CONTROL_WITH_RESET_WITH_CALLBACK(Func, Callback) \
-	if (Func) { renderer.ResetFrameIndex(); Callback; }
+	if (Func) { renderer->ResetFrameIndex(); Callback; }
 
 	while (!window.shouldClose())
 	{
@@ -432,16 +441,22 @@ int main()
 		ImGui::Begin("Settings");
 		ImGui::Text("FPS: %.1f", fps);
 		ImGui::Text("Frame Time: %.2f ms", frameTime);
-		ImGui::Checkbox("Multi-threaded", &renderer.GetSettings().MultiThreaded);
-		ImGui::Checkbox("Accumulate", &renderer.GetSettings().Accumulate);
+		ImGui::Checkbox("Multi-threaded", &renderer->GetSettings().MultiThreaded);
+		ImGui::Checkbox("Accumulate", &renderer->GetSettings().Accumulate);
 		IMGUI_CONTROL_WITH_RESET_WITH_CALLBACK(ImGui::DragFloat("Render Size", &renderSize, 0.01f, 0.1f, 2.0f, "%.2f"), renderSize = glm::clamp(renderSize, 0.1f, 2.0f));
+		if (ImGui::Combo("Renderer", &currentRendererIndex, rendererOptions, IM_ARRAYSIZE(rendererOptions))) {
+			if (currentRendererIndex == 0)
+				renderer = &cpuRenderer;
+			else
+				renderer = &gpuRenderer;
+		}
 		if (ImGui::Button("Reset")) {
-			renderer.ResetFrameIndex();
+			renderer->ResetFrameIndex();
 		}
 		ImGui::End();
 
 		ImGui::Begin("Scene");
-		IMGUI_CONTROL_WITH_RESET(ShowScene(&scene, &renderer));
+		IMGUI_CONTROL_WITH_RESET(ShowScene(&scene, renderer));
 		ImGui::End();
 
 
@@ -454,9 +469,8 @@ int main()
 
 		viewportWidth = ImGui::GetContentRegionAvail().x;
 		viewportHeight = ImGui::GetContentRegionAvail().y;
-		auto image = renderer.getFinalImage();
-		if (image)
-			ImGui::Image((ImTextureID)(intptr_t)image->GetTextureID(), ImVec2((float)viewportWidth, (float)viewportHeight));
+		if(renderer->isValidImage())
+			ImGui::Image((ImTextureID)(intptr_t)renderer->GetFinalImageID(), ImVec2((float)viewportWidth, (float)viewportHeight));
 
 		ImGui::End();
 		ImGui::PopStyleVar();
@@ -465,16 +479,15 @@ int main()
 		int newWidth = (int)(viewportWidth * renderSize);
 		int newHeight = (int)(viewportHeight * renderSize);
 		camera.OnResize(newWidth, newHeight);
-		renderer.OnResize(newWidth, newHeight);
-		renderer.Render(camera, scene);
+		renderer->OnResize(newWidth, newHeight);
+		renderer->Render(camera, scene);
 		auto endTime = Clock::now();
 		deltaTime = std::chrono::duration<float>(endTime - lastTime).count();
 		frameTime = std::chrono::duration<float, std::milli>(endTime - startTime).count();
 		fps = 1.0f / deltaTime;
 		lastTime = endTime;
 
-		if(camera.OnUpdate(deltaTime))
-			renderer.ResetFrameIndex();
+		IMGUI_CONTROL_WITH_RESET(camera.OnUpdate(deltaTime));
 
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

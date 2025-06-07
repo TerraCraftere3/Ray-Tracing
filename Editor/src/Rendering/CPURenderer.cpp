@@ -1,11 +1,11 @@
-#include "Renderer.h"
+#include "CPURenderer.h"
 #include <execution>
 #include <glm/ext/scalar_constants.hpp>
 #include <glm/ext/matrix_transform.hpp>
 
 using namespace glm;
 
-#define HitPayload Renderer::HitPayload
+#define HitPayload CPURenderer::HitPayload
 
 namespace Utils {
 	static uint32_t ConvertToRGBA(const vec4& color) {
@@ -40,9 +40,15 @@ namespace Utils {
 	}
 }
 
-#define MT
+CPURenderer::CPURenderer()
+{
+}
 
-void Renderer::Render(const Camera& camera, const Scene& scene)
+CPURenderer::~CPURenderer()
+{
+}
+
+void CPURenderer::Render(const Camera& camera, const Scene& scene)
 {
 	m_ActiveCamera = &camera;
 	m_ActiveScene = &scene;
@@ -87,7 +93,7 @@ void Renderer::Render(const Camera& camera, const Scene& scene)
 		m_FrameIndex = 1;
 }
 
-void Renderer::OnResize(uint32_t width, uint32_t height)
+void CPURenderer::OnResize(uint32_t width, uint32_t height)
 {
 	if (m_FinalImage)
 	{
@@ -115,6 +121,16 @@ void Renderer::OnResize(uint32_t width, uint32_t height)
 		m_ImageVerticalIter[i] = i;
 }
 
+unsigned int CPURenderer::GetFinalImageID() const
+{
+	return m_FinalImage->GetTextureID();
+}
+
+bool CPURenderer::isValidImage() const
+{
+	return (bool)(m_FinalImage);
+}
+
 glm::mat4 GetTransform(const Mesh& mesh)
 {
 	glm::mat4 transform = glm::mat4(1.0f);
@@ -131,7 +147,7 @@ glm::mat4 GetTransform(const Mesh& mesh)
 	return transform;
 }
 
-Renderer::HitPayload Renderer::TraceRay(const Ray& ray)
+CPURenderer::HitPayload CPURenderer::TraceRay(const Ray& ray)
 {
 	int closestSphereIndex = -1;
 	int closestMeshIndex = -1;
@@ -225,7 +241,7 @@ Renderer::HitPayload Renderer::TraceRay(const Ray& ray)
 
 
 
-glm::vec4 Renderer::PerPixel(uint32_t x, uint32_t y)
+glm::vec4 CPURenderer::PerPixel(uint32_t x, uint32_t y)
 {
 	Ray ray;
 	ray.Origin = m_ActiveCamera->GetPosition();
@@ -278,7 +294,7 @@ glm::vec4 Renderer::PerPixel(uint32_t x, uint32_t y)
 	return vec4(light, 1);
 }
 
-HitPayload Renderer::ClosestHit(const Ray& ray, float hitDistance, int meshIndex, int triangleIndex, float u, float v)
+HitPayload CPURenderer::ClosestHit(const Ray& ray, float hitDistance, int meshIndex, int triangleIndex, float u, float v)
 {
 	HitPayload payload;
 	payload.HitDistance = hitDistance;
@@ -357,7 +373,7 @@ HitPayload Renderer::ClosestHit(const Ray& ray, float hitDistance, int meshIndex
 }
 
 
-HitPayload Renderer::ClosestHit(const Ray& ray, float HitDistance, int ObjectIndex)
+HitPayload CPURenderer::ClosestHit(const Ray& ray, float HitDistance, int ObjectIndex)
 {
 	HitPayload payload;
 	payload.HitDistance = HitDistance;
@@ -392,14 +408,14 @@ HitPayload Renderer::ClosestHit(const Ray& ray, float HitDistance, int ObjectInd
 	return payload;
 }
 
-HitPayload Renderer::Miss(const Ray& ray)
+HitPayload CPURenderer::Miss(const Ray& ray)
 {
 	HitPayload payload;
 	payload.HitDistance = -1.0f; // Indicating no hit
 	return payload;
 }
 
-bool Renderer::IntersectTriangle(const Ray& ray, const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2, float& t, float& u, float& v) {
+bool CPURenderer::IntersectTriangle(const Ray& ray, const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2, float& t, float& u, float& v) {
 	const float EPSILON = 0.0000001f;
 	glm::vec3 edge1 = v1 - v0;
 	glm::vec3 edge2 = v2 - v0;

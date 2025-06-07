@@ -528,6 +528,9 @@
     <ClInclude Include="src\vendor\glfw\src\null_platform.h">
       <Filter>vendor\glfw\src</Filter>
     </ClInclude>
+    <ClInclude Include="src\Platform\Models.h" />
+    <ClInclude Include="src\Rendering\CPURenderer.h" />
+    <ClInclude Include="src\Rendering\GPURenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp" />
@@ -562,9 +565,6 @@
       <Filter>Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\Rendering\Camera.cpp">
-      <Filter>Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Rendering\Renderer.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
     <ClCompile Include="src\Vendor\glad\src\glad.c">
@@ -660,5 +660,7 @@
     <ClCompile Include="src\vendor\glfw\src\window.c">
       <Filter>vendor\glfw\src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Rendering\CPURenderer.cpp" />
+    <ClCompile Include="src\Rendering\GPURenderer.cpp" />
   </ItemGroup>
 </Project>

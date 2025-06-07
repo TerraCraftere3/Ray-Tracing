@@ -4,6 +4,7 @@
 #include <iostream>
 #include <filesystem>
 #include <Core/Log.h>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace Utils {
     void CheckCompileErrors(GLuint shader, std::string type)
@@ -39,10 +40,54 @@ namespace Utils {
     }
 }
 
+GLuint UploadMaterials(const std::vector<GPU_Material>& materials) {
+    GLuint ssbo;
+    glGenBuffers(1, &ssbo);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, materials.size() * sizeof(GPU_Material), materials.data(), GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, ssbo); // binding = 1 in GLSL
+    return ssbo;
+}
+
+// Upload spheres
+GLuint UploadSpheres(const std::vector<GPU_Sphere>& spheres) {
+    GLuint ssbo;
+    glGenBuffers(1, &ssbo);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, spheres.size() * sizeof(GPU_Sphere), spheres.data(), GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, ssbo); // binding = 0 in GLSL
+    return ssbo;
+}
+
+// Set camera uniforms
+void SetCameraUniforms(GLuint shaderProgram, const glm::vec3& position, const glm::vec3& forward, const glm::vec3& right, const glm::vec3& up, float fovDegrees, float aspectRatio, int frameIndex) {
+    glUseProgram(shaderProgram);
+    glUniform3fv(glGetUniformLocation(shaderProgram, "cameraPosition"), 1, &position[0]);
+    glUniform3fv(glGetUniformLocation(shaderProgram, "cameraForward"), 1, &forward[0]);
+    glUniform3fv(glGetUniformLocation(shaderProgram, "cameraRight"), 1, &right[0]);
+    glUniform3fv(glGetUniformLocation(shaderProgram, "cameraUp"), 1, &up[0]);
+    glUniform1f(glGetUniformLocation(shaderProgram, "cameraFov"), fovDegrees);
+    glUniform1f(glGetUniformLocation(shaderProgram, "aspectRatio"), aspectRatio);
+}
+
 GPURenderer::GPURenderer()
 {
     InitQuad();
     InitShader();
+
+    std::vector<GPU_Material> materials = {
+        { glm::vec3(0.8, 0.3, 0.3), glm::vec3(0.0), 0.2f },
+        { glm::vec3(0.9), glm::vec3(5.0), 0.0f }
+    };
+
+    std::vector<GPU_Sphere> spheres = {
+        { glm::vec3(0, 0, -5), 1.0f, 0 },
+        { glm::vec3(0, -1001, -5), 1000.0f, 0 },
+        { glm::vec3(0, 1, -5), 0.5f, 1 }
+    };
+
+    GLuint matSSBO = UploadMaterials(materials);
+    GLuint sphereSSBO = UploadSpheres(spheres);
 }
 
 GPURenderer::~GPURenderer()
@@ -58,6 +103,15 @@ void GPURenderer::Render(const Camera& camera, const Scene& scene)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, m_Framebuffer);
     glUseProgram(m_ShaderProgram);
+
+    glUniform1i(glGetUniformLocation(m_ShaderProgram, "frameIndex"), m_FrameIndex);
+	glUniform2i(glGetUniformLocation(m_ShaderProgram, "resolution"), m_Width, m_Height);
+	glUniform1i(glGetUniformLocation(m_ShaderProgram, "sphereCount"), scene.Spheres.size());
+	glUniform1i(glGetUniformLocation(m_ShaderProgram, "materialCount"), scene.Materials.size());
+	glUniformMatrix4fv(glGetUniformLocation(m_ShaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(camera.GetProjection()));
+    glUniformMatrix4fv(glGetUniformLocation(m_ShaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(camera.GetView()));
+    glUniformMatrix4fv(glGetUniformLocation(m_ShaderProgram, "projectionInverse"), 1, GL_FALSE, glm::value_ptr(camera.GetInverseProjection()));
+    glUniformMatrix4fv(glGetUniformLocation(m_ShaderProgram, "viewInverse"), 1, GL_FALSE, glm::value_ptr(camera.GetInverseView()));
 
     glClearColor(0.7f, 0.3f, 0.2f, 1.0f); // use something visible
     glClear(GL_COLOR_BUFFER_BIT);

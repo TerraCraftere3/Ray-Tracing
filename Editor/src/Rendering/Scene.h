@@ -51,3 +51,17 @@ struct Scene {
 	std::vector<Mesh> Meshes;
 	std::vector<Material> Materials;
 };
+
+struct GPU_Material {
+	glm::vec3 albedo;
+	glm::vec3 emission;
+	float roughness;
+	float padding1;
+};
+
+struct GPU_Sphere {
+	glm::vec3 position;
+	float radius;
+	int materialIndex;
+	glm::vec3 padding; // pad to 32 bytes
+};
